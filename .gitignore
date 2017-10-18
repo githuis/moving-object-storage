@@ -33,3 +33,8 @@
 
 #DSstore
 *.DS_Store
+
+#Cmake
+cmake-build-debug/
+.idea/
+CMakeLists.txt
