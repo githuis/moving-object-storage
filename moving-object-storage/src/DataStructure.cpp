@@ -10,7 +10,7 @@ DataStructure::~DataStructure()
     //dtor
 }
 
-Test()
+static void Test()
 {
     cout << "Hello Jesper" << endl;
 }
