@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1509100480 source:/home/bolhuis/Projects/moving-object-storage/moving-object-storage/main.cpp
+	<iostream>
+	"include/DataStructure.h"
+
+1509100480 /home/bolhuis/Projects/moving-object-storage/moving-object-storage/include/DataStructure.h
+
