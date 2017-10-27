@@ -1,3 +1,4 @@
+#include <iostream>
 #include "DataStructure.h"
 
 DataStructure::DataStructure()
@@ -10,7 +11,7 @@ DataStructure::~DataStructure()
     //dtor
 }
 
-static void Test()
+void DataStructure::Test()
 {
-    cout << "Hello Jesper" << endl;
+    std::cout << "Hello Jesper" << std::endl;
 }

@@ -6,6 +6,7 @@ using namespace std;
 int main()
 {
     cout << "Hello world!" << endl;
-    DataStructure::Test();
+    DataStructure *ds = new DataStructure();
+    ds->Test();
     return 0;
 }

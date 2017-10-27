@@ -1,7 +1,13 @@
 # depslib dependency file v1.0
-1509100480 source:/home/bolhuis/Projects/moving-object-storage/moving-object-storage/main.cpp
+1509101254 source:/home/bolhuis/Projects/moving-object-storage/moving-object-storage/main.cpp
 	<iostream>
 	"include/DataStructure.h"
 
 1509100480 /home/bolhuis/Projects/moving-object-storage/moving-object-storage/include/DataStructure.h
+
+1509101244 source:/home/bolhuis/Projects/moving-object-storage/moving-object-storage/src/DataStructure.cpp
+	<iostream>
+	"DataStructure.h"
+
+1509100480 /home/bolhuis/Projects/moving-object-storage/moving-object-storage/src/DataStructure.h
 
