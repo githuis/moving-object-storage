@@ -1,5 +1,5 @@
 #include <iostream>
-#include "DataStructure.h"
+#include "../include/DataStructure.h"
 
 DataStructure::DataStructure()
 {

@@ -7,7 +7,7 @@ class DataStructure
     public:
         DataStructure();
         virtual ~DataStructure();
-        void Test();
+        static void Test();
 
     protected:
 
