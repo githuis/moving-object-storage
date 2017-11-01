@@ -12,8 +12,10 @@ int main()
     ds->Test();
 
     int time;
-    string eID;
+    int eID;
     tie(eID,time) = ds -> testTra();
+
+    cout << "Edge id: " << eID << " At time: " << time << endl;
 
     return 0;
 }

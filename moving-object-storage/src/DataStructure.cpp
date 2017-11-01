@@ -1,6 +1,7 @@
 #include <iostream>
+#include <tuple>
+#include <functional>
 #include "../include/DataStructure.h"
-
 
 DataStructure::DataStructure()
 {
@@ -17,7 +18,33 @@ void DataStructure::Test()
     std::cout << "Hello Jesper" << std::endl;
 }
 
-std::tuple<std::string, int> testTra()
+
+std::tuple<int, int> DataStructure::testTra()
 {
-    return{"2",2};
-};
+    return std::make_tuple(2,23);
+}
+
+DataStructure::DataStructure(Trajectory_t currentTrajectory)
+{
+    current = currentTrajectory;
+}
+
+DataStructure::DataStructure(List_Trajectory_t plannedTrajectory)
+{
+    planned = plannedTrajectory;
+
+}
+
+DataStructure::DataStructure(Trajectory_t currentTrajectory, List_Trajectory_t plannedTrajectory)
+{
+    current = currentTrajectory;
+    planned = plannedTrajectory;
+
+}
+
+void DataStructure::MakeTest()
+{
+    current =
+
+}
+
