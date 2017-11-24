@@ -44,7 +44,10 @@ DataStructure::DataStructure(Trajectory_t currentTrajectory, List_Trajectory_t p
 
 void DataStructure::MakeTest()
 {
-    current =
+   // current = new Trajectory_t(2,2);
 
 }
+
+
+
 

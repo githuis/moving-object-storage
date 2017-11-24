@@ -7,6 +7,7 @@
 
 #define Trajectory_t std::tuple<uint64_t, uint64_t>
 #define List_Trajectory_t std::list<Trajectory_t>
+#define Vehicle std::tuple<uint64_t,Trajectory_t>
 
 
 class DataStructure
@@ -28,6 +29,12 @@ class DataStructure
         void MakeTest();
         Trajectory_t current;
         List_Trajectory_t planned;
+
+        //Vehicle
+        std::tuple<int,Trajectory_t> testVec();
+        void MakeVechicle();
+
+        //Grid
 
         //Accessors
 
