@@ -34,6 +34,7 @@ class DataStructure
         std::tuple<int,Trajectory_t> testVec();
         void MakeVechicle();
 
+
         //Grid
 
         //Accessors
@@ -42,6 +43,18 @@ class DataStructure
     protected:
 
     private:
+    void Insert(std::tuple<uint64_t, std::tuple<uint64_t, uint64_t>> currentVehicle,
+                std::tuple<uint64_t, uint64_t> currentTrajectory);
+
+    void Delete(std::tuple<uint64_t, std::tuple<uint64_t, uint64_t>> currentVehicle);
+
+    void TrajectoryUpdate(std::tuple<uint64_t, std::tuple<uint64_t, uint64_t>> currentVehicle);
+
+    void GetGridCell(std::tuple<uint64_t, std::tuple<uint64_t, uint64_t>> currentVehicle);
+
+    void GetNestedGridCell();
+
+    void GetCars();
 };
 
 #endif // DATASTRUCTURE_H
