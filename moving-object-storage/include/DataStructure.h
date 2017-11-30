@@ -4,6 +4,7 @@
 #include <string>
 #include <list>
 #include <tuple>
+#include <ctime>
 
 #define Trajectory_t std::tuple<uint64_t, uint64_t>
 #define List_Trajectory_t std::list<Trajectory_t>
@@ -53,9 +54,11 @@ class DataStructure
 
     void GetGridCell(std::tuple<uint64_t, std::tuple<uint64_t, uint64_t>> currentVehicle);
 
-    void GetNestedGridCell();
-
-    void GetCars();
+    void InsertVehiclesIntoEdge(std::tuple<uint64_t, std::tuple<uint64_t, uint64_t>> currentVehicle,
+                      std::tuple<uint64_t, uint64_t> currentTrajectory);
+    void DeleteVehiclesFromEdge(std::tuple<uint64_t, std::tuple<uint64_t, uint64_t>> currentVehicle,
+                                std::tuple<uint64_t, uint64_t> currentTrajectory);
+    void TimeUpdate(std::tuple<uint64_t, std::tuple<uint64_t, uint64_t>> currentVehicle, uint64_t);
 };
 
 #endif // DATASTRUCTURE_H

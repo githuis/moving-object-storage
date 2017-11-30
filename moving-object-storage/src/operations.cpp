@@ -13,6 +13,9 @@ void DataStructure::Insert(Vehicle currentVehicle, Trajectory_t currentTrajector
 
 void DataStructure::Delete(Vehicle currentVehicle)
 {
+    Trajectory_t trajectory;
+    trajectory = std::get<1>(currentVehicle);
+    DeleteVehiclesFromEdge(currentVehicle,trajectory);
 
 }
 
@@ -21,17 +24,17 @@ void DataStructure::TrajectoryUpdate(Vehicle currentVehicle)
 
 }
 
-//void DataStructure::TimeUpdate(int vehicleId, )
-//{}
-
-//Needs to also be able to input a gridCell
-void DataStructure::GetGridCell(Vehicle currentVehicle)
+void DataStructure::TimeUpdate(Vehicle currentVehicle, uint64_t time)
 {
 
 }
 
-void DataStructure::GetNestedGridCell()
-{}
+void DataStructure::DeleteVehiclesFromEdge(Vehicle currentVehicle, Trajectory_t currentTrajectory)
+{
 
-void DataStructure::GetCars()
-{}
+}
+
+void DataStructure::InsertVehiclesIntoEdge(Vehicle currentVehicle, Trajectory_t currentTrajectory)
+{
+
+}
