@@ -43,6 +43,7 @@ class DataStructure
     protected:
 
     private:
+    //Vehicle
     void Insert(std::tuple<uint64_t, std::tuple<uint64_t, uint64_t>> currentVehicle,
                 std::tuple<uint64_t, uint64_t> currentTrajectory);
 
