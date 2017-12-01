@@ -53,9 +53,9 @@ class DataStructure
     void TrajectoryUpdate(Vehicle, List_Trajectory_t);
 
     void InsertVehiclesIntoEdge(Vehicle,
-                      List_Trajectory_t);
+                                std::list<uint64_t>);
     void DeleteVehiclesFromEdge(Vehicle,
-                                List_Trajectory_t);
+                                std::list<uint64_t>);
     void TimeUpdate(Vehicle, int64_t);
 };
 
