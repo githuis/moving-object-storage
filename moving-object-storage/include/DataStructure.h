@@ -8,7 +8,7 @@
 
 #define Trajectory_t std::tuple<uint64_t, uint64_t>
 #define List_Trajectory_t std::list<Trajectory_t>
-#define Vehicle std::tuple<uint64_t,Trajectory_t>
+#define Vehicle std::tuple<uint64_t,List_Trajectory_t>
 
 
 class DataStructure
@@ -45,20 +45,18 @@ class DataStructure
 
     private:
     //Vehicle
-    void Insert(std::tuple<uint64_t, std::tuple<uint64_t, uint64_t>> currentVehicle,
-                std::tuple<uint64_t, uint64_t> currentTrajectory);
+    void Insert(Vehicle,
+                List_Trajectory_t);
 
-    void Delete(std::tuple<uint64_t, std::tuple<uint64_t, uint64_t>> currentVehicle);
+    void Delete(Vehicle);
 
-    void TrajectoryUpdate(std::tuple<uint64_t, std::tuple<uint64_t, uint64_t>> currentVehicle);
+    void TrajectoryUpdate(Vehicle, List_Trajectory_t);
 
-    void GetGridCell(std::tuple<uint64_t, std::tuple<uint64_t, uint64_t>> currentVehicle);
-
-    void InsertVehiclesIntoEdge(std::tuple<uint64_t, std::tuple<uint64_t, uint64_t>> currentVehicle,
-                      std::tuple<uint64_t, uint64_t> currentTrajectory);
-    void DeleteVehiclesFromEdge(std::tuple<uint64_t, std::tuple<uint64_t, uint64_t>> currentVehicle,
-                                std::tuple<uint64_t, uint64_t> currentTrajectory);
-    void TimeUpdate(std::tuple<uint64_t, std::tuple<uint64_t, uint64_t>> currentVehicle, uint64_t);
+    void InsertVehiclesIntoEdge(Vehicle,
+                      List_Trajectory_t);
+    void DeleteVehiclesFromEdge(Vehicle,
+                                List_Trajectory_t);
+    void TimeUpdate(Vehicle, int64_t);
 };
 
 #endif // DATASTRUCTURE_H
