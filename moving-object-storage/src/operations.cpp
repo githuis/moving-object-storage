@@ -15,7 +15,15 @@ void DataStructure::Insert(Vehicle currentVehicle, List_Trajectory_t currentTraj
 
     List_Trajectory_t trajectory;
     trajectory = std::get<1>(currentVehicle);
-    //InsertVehiclesIntoEdge(currentVehicle,trajectory);
+    std::list<uint64_t> edges;
+    std::list<uint64_t >::iterator it;
+    for (std::list<Trajectory_t>::iterator traElement = trajectory.begin(); traElement != trajectory.end(); ++traElement)
+    {
+        uint64_t insert;
+        insert = std::get<0>(*traElement);
+        edges.insert(it,insert);
+    }
+    InsertVehiclesIntoEdge(currentVehicle,edges);
 
     //set in i vehicle database?
 
@@ -26,7 +34,15 @@ void DataStructure::Delete(Vehicle currentVehicle)
     //fjern fra trajectories
     List_Trajectory_t trajectory;
     trajectory = std::get<1>(currentVehicle);
-    //DeleteVehiclesFromEdge(currentVehicle,trajectory);
+    std::list<uint64_t> edges;
+    std::list<uint64_t >::iterator it;
+    for (std::list<Trajectory_t>::iterator traElement = trajectory.begin(); traElement != trajectory.end(); ++traElement)
+    {
+        uint64_t insert;
+        insert = std::get<0>(*traElement);
+        edges.insert(it,insert);
+    }
+    DeleteVehiclesFromEdge(currentVehicle,edges);
 
     //fjern fra vehicle database?
 
@@ -80,12 +96,12 @@ void DataStructure::TimeUpdate(Vehicle currentVehicle, int64_t time)
     }
 }
 
-void DataStructure::DeleteVehiclesFromEdge(Vehicle currentVehicle, std::list<uint64_t> oldEdges)
+void DataStructure::DeleteVehiclesFromEdge(Vehicle currentVehicle, std::list<uint64_t> &edges)
 {
 
 }
 
-void DataStructure::InsertVehiclesIntoEdge(Vehicle currentVehicle, std::list<uint64_t> newEdges)
+void DataStructure::InsertVehiclesIntoEdge(Vehicle currentVehicle, std::list<uint64_t> &edges)
 {
 
 }
