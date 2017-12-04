@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <list>
 
-
+//inserts a vehicle into database
 void DataStructure::Insert(Vehicle currentVehicle, List_Trajectory_t currentTrajectory)
 {
     //add til trajectories
@@ -28,7 +28,7 @@ void DataStructure::Insert(Vehicle currentVehicle, List_Trajectory_t currentTraj
     //set in i vehicle database?
 
 }
-
+//deletes from vehicle database
 void DataStructure::Delete(Vehicle currentVehicle)
 {
     //fjern fra trajectories
@@ -49,7 +49,7 @@ void DataStructure::Delete(Vehicle currentVehicle)
 
 
 }
-
+//changes a vehicle trajectory
 void DataStructure::TrajectoryUpdate(Vehicle currentVehicle, List_Trajectory_t trajectory)
 {
     List_Trajectory_t trajOld;
@@ -82,7 +82,7 @@ void DataStructure::TrajectoryUpdate(Vehicle currentVehicle, List_Trajectory_t t
 
     *tPointer = trajectory;
 }
-
+//adds time to the exprected  arrival time on trajectories
 void DataStructure::TimeUpdate(Vehicle currentVehicle, int64_t time)
 {
     List_Trajectory_t trajectory;
@@ -95,12 +95,12 @@ void DataStructure::TimeUpdate(Vehicle currentVehicle, int64_t time)
         *timePointer += time;
     }
 }
-
+//deletes the reference to a vehicle from edges
 void DataStructure::DeleteVehiclesFromEdge(Vehicle currentVehicle, std::list<uint64_t> &edges)
 {
 
 }
-
+//add reference to a vehicle to edges
 void DataStructure::InsertVehiclesIntoEdge(Vehicle currentVehicle, std::list<uint64_t> &edges)
 {
 

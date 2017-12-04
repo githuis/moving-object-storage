@@ -45,18 +45,18 @@ class DataStructure
 
     private:
     //Vehicle
-    void Insert(Vehicle,
-                List_Trajectory_t);
+    void Insert(Vehicle currentVehicle,
+                List_Trajectory_t trajectory);
 
-    void Delete(Vehicle);
+    void Delete(Vehicle currentVehicle);
 
-    void TrajectoryUpdate(Vehicle, List_Trajectory_t);
+    void TrajectoryUpdate(Vehicle currentVehicle, List_Trajectory_t trajectory);
 
     void InsertVehiclesIntoEdge(Vehicle currentVehicle,
                                 std::list<uint64_t> &edges);
     void DeleteVehiclesFromEdge(Vehicle currentVehicle,
                                 std::list<uint64_t> &edges);
-    void TimeUpdate(Vehicle, int64_t);
+    void TimeUpdate(Vehicle currentVehicle, int64_t time);
 };
 
 #endif // DATASTRUCTURE_H
