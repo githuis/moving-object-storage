@@ -8,6 +8,7 @@
 
 #include <osmium/handler.hpp>
 #include <osmium/handler/node_locations_for_ways.hpp>
+#include <iostream>
 
 
 class Osm {
@@ -40,21 +41,31 @@ protected:
 
 
             const char *highway = way.tags()["highway"];
+            const char *name = way.tags()["name"];
+
             if (highway) {
                 for (auto i = way.nodes().begin(); i != way.nodes().end(); ++i) {
                     //i->location().x//
                     double dist = distanceCalculate(targetLocation.x(), targetLocation.y(), i->location().x(),
                                                     i->location().y());
+
+
+                    if(name)
+                    {
+                        std::cout << name << " Id: " << way.id() << " Distance: " << (dist /100000000)<< std::endl;
+                    }
+
                     if (dist < distance) {
                         distance = dist;
                         closestWayId = way.id();
                     }
                 }
             }
+
+
         }
 
     }; // struct ClosestWayHandler
-
 
     //From http://www.cplusplus.com/forum/beginner/178293/
     static double distanceCalculate(double x1, double y1, double x2, double y2)

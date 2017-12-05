@@ -15,7 +15,7 @@ DataStructure::~DataStructure()
 
 void DataStructure::Test()
 {
-    std::cout << "Hello Jesper" << std::endl;
+    std::cout << "Created datastructure" << std::endl;
 }
 
 

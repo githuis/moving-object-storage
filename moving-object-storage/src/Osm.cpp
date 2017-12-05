@@ -137,3 +137,4 @@ osmium::object_id_type Osm::FindClosestWay(std::string file, osmium::Location ta
 
     std::cout << "Closest way id is: " << handler.closestWayId << std::endl;
 }
+
