@@ -1,11 +1,12 @@
 #include <iostream>
 #include "include/DataStructure.h"
+#include "include/Osm.h"
 #include <string>
 #include <tuple>
 
 using namespace std;
 
-int main()
+int main(int argc, char* argv[])
 {
     cout << "Hello world!" << endl;
     DataStructure *ds = new DataStructure();
@@ -16,6 +17,16 @@ int main()
     tie(eID,time) = ds -> testTra();
 
     cout << "Edge id: " << eID << " At time: " << time << endl;
+
+
+    //Test Osmium
+    Osm *osm = new Osm();
+    osm->LocationTest();
+    //osm->AddPoiTest(argc, argv);
+
+    cout << argv[1] << endl;
+
+
 
     return 0;
 }
