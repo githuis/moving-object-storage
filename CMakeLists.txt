@@ -16,7 +16,7 @@ include_directories(SYSTEM ${OSMIUM_INCLUDE_DIRS})
 
 set(SOURCE_FILES
         moving-object-storage/src/DataStructure.cpp
-        moving-object-storage/main.cpp moving-object-storage/src/operations.cpp moving-object-storage/src/Osm.cpp moving-object-storage/include/Osm.h)
+        moving-object-storage/main.cpp moving-object-storage/src/operations.cpp moving-object-storage/src/Osm.cpp moving-object-storage/include/Osm.h moving-object-storage/src/NeighbourList.cpp moving-object-storage/include/NeighbourList.h)
 
 add_executable(moving_object_storage ${SOURCE_FILES} moving-object-storage/src/operations.cpp)
 

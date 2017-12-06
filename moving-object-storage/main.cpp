@@ -24,6 +24,8 @@ int main(int argc, char* argv[])
     osm->LocationTest();
     //osm->AddPoiTest(argc, argv);
 
+
+
     cout << argv[1] << endl;
 
 
