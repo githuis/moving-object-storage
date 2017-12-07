@@ -14,6 +14,10 @@ public:
     osmium::object_id_type nodeId;
     osmium::object_id_type edge;
     GraphNode *next;
+
+    bool operator<(const GraphNode& rhs) const {
+        return nodeId < rhs.nodeId;
+    }
 };
 
 class NeighbourList

@@ -20,8 +20,6 @@ class DataStructure {
 public:
     DataStructure();
 
-
-
     std::map<osmium::object_id_type, GraphNode*> NodeMap;
 
 

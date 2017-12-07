@@ -138,3 +138,34 @@ osmium::object_id_type Osm::FindClosestWay(std::string file, osmium::Location ta
     std::cout << "Closest way id is: " << handler.closestWayId << std::endl;
 }
 
+void Osm::GraphBuilderTest()
+{
+    std::string fileName = "map.osm";
+    osmium::io::Reader reader{fileName, osmium::osm_entity_bits::node | osmium::osm_entity_bits::way};
+    osmium::io::Reader readerTwo{fileName, osmium::osm_entity_bits::node | osmium::osm_entity_bits::way};
+
+    index_type index;
+    index_type indexTwo;
+
+    GraphBuilderHandler handler;
+    handler.init = true;
+
+
+    location_handler_type locationHandler{index};
+    location_handler_type locationHandlerTwo{indexTwo};
+
+    osmium::apply(reader, locationHandler, handler);
+
+
+    handler.init = false;
+
+    osmium::apply(readerTwo, locationHandlerTwo, handler);
+
+
+    auto mylist = handler.map;
+
+    std::cout << "HHellooo! Number of start nodes: " << std::distance(mylist.begin(), mylist.end()) << std::endl;
+
+    //std::cout << "Closest way id is: " << handler.closestWayId << std::endl;
+}
+

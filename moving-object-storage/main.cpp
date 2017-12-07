@@ -21,8 +21,9 @@ int main(int argc, char* argv[])
 
     //Test Osmium
     Osm *osm = new Osm();
-    osm->LocationTest();
+    //osm->LocationTest();
     //osm->AddPoiTest(argc, argv);
+    osm->GraphBuilderTest();
 
 
 
