@@ -192,6 +192,13 @@ protected:
             if (!highway)
                 return;
 
+            //We don't want to include cycleways, so if the highway is a cycleway, skip it.
+            if(std::string(highway) == cycleHighWayTag)
+            {
+                //std::cout << "IT'S A CYCLEWAY, GET OUT" << std::endl;
+
+                return;
+            }
 
             NeighbourList *list = new NeighbourList();
 
@@ -216,6 +223,8 @@ protected:
 
 
 private:
+
+    static const std::string cycleHighWayTag;
 
     void AddPoi(int argc, char *const *argv) const;
 

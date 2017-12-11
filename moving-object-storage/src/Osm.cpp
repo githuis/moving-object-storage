@@ -3,7 +3,6 @@
 //
 
 #include "../include/Osm.h"
-#include <iostream>
 
 // Allow any format of input files (XML, PBF, ...)
 #include <osmium/io/any_input.hpp>
@@ -19,20 +18,13 @@
 #include <osmium/index/map/flex_mem.hpp>
 
 // For the NodeLocationForWays handler
-#include <osmium/handler/node_locations_for_ways.hpp>
 
 //poi creation
-#include <cstring>   // for std::strcmp
-#include <ctime>     // for std::time
-#include <exception> // for std::exception
-#include <string>    // for std::string
-#include <utility>   // for std::move
 
 // Allow any format of output files (XML, PBF, ...)
 #include <osmium/io/any_output.hpp>
 
 // We want to use the builder interface
-#include <osmium/builder/osm_object_builder.hpp>
 #include <osmium/builder/attr.hpp>
 
 // The type of index used. This must match the include file above
@@ -42,11 +34,12 @@ using index_type = osmium::index::map::FlexMem<osmium::unsigned_object_id_type, 
 using location_handler_type = osmium::handler::NodeLocationsForWays<index_type>;
 
 //For locations (x,y pairs)
-#include <osmium/osm/location.hpp>
+
+const std::string Osm::cycleHighWayTag = "cycleway";
+
 
 Osm::Osm()
 {
-
 }
 
 void Osm::AddPoiTest(int argc, char *argv[])
