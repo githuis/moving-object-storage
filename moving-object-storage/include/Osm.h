@@ -132,18 +132,46 @@ protected:
                 }
 
                 //std::cout << "List len: " << lst.size() << "\tNodes: " << way.nodes().size() << std::endl;
+                bool foundSelf = false;
 
                 for (auto i = way.nodes().begin(); i != way.nodes().end(); ++i) {
                     it = map.find(i->ref());
 
                     if (it != map.end()) {
+                        foundSelf = false;
+                        osmium::object_id_type temp = -1;
                         for (std::list<osmium::object_id_type>::iterator j = lst.begin(); j != lst.end(); ++j) {
 
                             if (*j == i->ref()) // Node i should not be able to go to node i
+                            {
+                                foundSelf = true;
+                                if(temp != -1)
+                                    map[i->ref()].add(temp, way.id());
+                                continue;
+                            }
+
+                            auto l = map[i->ref()].head;
+                            bool addFlag = true; //Assume we should not add node *j
+                            for (int k = 0; k < map[i->ref()].length; ++k) {
+                                if (l->nodeId != *j) {
+                                    l = l->next;
+                                    continue;
+                                } else {
+                                    addFlag = true;
+                                }
+                            }
+
+                            if (!addFlag)
                                 continue;
 
+                            if (!foundSelf) {
+                                temp = *j;
+                            } else {
+                                map[i->ref()].add(*j, way.id());
+                                break;
 
-                            map[i->ref()].add(*j, way.id());
+                            }
+
 
                         }
                     }
