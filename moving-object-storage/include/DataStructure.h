@@ -10,9 +10,10 @@
 #include "NeighbourList.h"
 
 
-#define Trajectory_t std::tuple<uint64_t, uint64_t>
+#define Trajectory_t std::list<osmium::object_id_type>
 #define List_Trajectory_t std::list<Trajectory_t>
 #define Vehicle std::tuple<uint64_t,Trajectory_t>
+#define Nodemap_t std::map<osmium::object_id_type, GraphNode*>
 
 class DataStructure {
 
@@ -20,8 +21,7 @@ class DataStructure {
 public:
     DataStructure();
 
-    std::map<osmium::object_id_type, GraphNode*> NodeMap;
-
+    Nodemap_t NodeMap;
 
     explicit DataStructure(Trajectory_t currentTrajectory);
 
@@ -54,18 +54,16 @@ protected:
 
 private:
     //Vehicle
-    void Insert(std::tuple<uint64_t, std::tuple<uint64_t, uint64_t>> currentVehicle,
-                std::tuple<uint64_t, uint64_t> currentTrajectory);
+    void Insert(Vehicle vehicle, Trajectory_t trajectory);
 
-    void Delete(std::tuple<uint64_t, std::tuple<uint64_t, uint64_t>> currentVehicle);
+    void Delete(Vehicle vehicle);
 
-    void TrajectoryUpdate(std::tuple<uint64_t, std::tuple<uint64_t, uint64_t>> currentVehicle);
+    void TrajectoryUpdate(Vehicle vehicle);
 
-    void GetGridCell(std::tuple<uint64_t, std::tuple<uint64_t, uint64_t>> currentVehicle);
+    //void GetGridCell(std::tuple<uint64_t, std::tuple<uint64_t, uint64_t>> currentVehicle);
+    //void GetNestedGridCell();
 
-    void GetNestedGridCell();
-
-    void GetCars();
+    void GetCars(); //på en traj?
 };
 
 #endif // DATASTRUCTURE_H
