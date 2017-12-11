@@ -138,7 +138,7 @@ osmium::object_id_type Osm::FindClosestWay(std::string file, osmium::Location ta
     std::cout << "Closest way id is: " << handler.closestWayId << std::endl;
 }
 
-void Osm::GraphBuilderTest()
+void Osm::GraphBuilderTest(std::map<osmium::object_id_type, NeighbourList> verticies)
 {
     std::string fileName = "map.osm";
     osmium::io::Reader reader{fileName, osmium::osm_entity_bits::node | osmium::osm_entity_bits::way};
@@ -149,6 +149,7 @@ void Osm::GraphBuilderTest()
 
     GraphBuilderHandler handler;
     handler.init = true;
+    handler.moreThanOneConnectionMap = verticies;
 
 
     location_handler_type locationHandler{index};
@@ -161,11 +162,25 @@ void Osm::GraphBuilderTest()
 
     osmium::apply(readerTwo, locationHandlerTwo, handler);
 
+    std::cout << "Memes" << std::endl;
+}
 
-    auto mylist = handler.map;
+//Returns all nodes which are connected to more than a single way
+std::map<osmium::object_id_type, NeighbourList> Osm::NodeWayBuilder()
+{
+    std::string fileName = "map.osm";
+    osmium::io::Reader reader{fileName, osmium::osm_entity_bits::node | osmium::osm_entity_bits::way};
+    index_type index;
 
-    std::cout << "HHellooo! Number of start nodes: " << std::distance(mylist.begin(), mylist.end()) << std::endl;
+    NodeWayAssignmentHandler handler;
 
-    //std::cout << "Closest way id is: " << handler.closestWayId << std::endl;
+    location_handler_type locationHandler{index};
+
+    osmium::apply(reader, locationHandler, handler);
+
+    handler.DeleteSingles();
+    handler.DeleteSingles();
+
+    return handler.partOfWayMap;
 }
 

@@ -10,6 +10,7 @@
 #include <osmium/handler/node_locations_for_ways.hpp>
 #include <iostream>
 #include "NeighbourList.h"
+#include <list>
 
 
 class Osm {
@@ -20,7 +21,9 @@ public:
 
     void LocationTest();
 
-    void GraphBuilderTest();
+    void GraphBuilderTest(std::map<osmium::object_id_type, NeighbourList> verticies);
+
+    std::map<osmium::object_id_type, NeighbourList> NodeWayBuilder();
 
     osmium::object_id_type FindClosestWay(std::string file, osmium::Location target);
 
@@ -88,6 +91,7 @@ protected:
     struct GraphBuilderHandler : public osmium::handler::Handler {
 
         std::map<osmium::object_id_type, NeighbourList> map;
+        std::map<osmium::object_id_type, NeighbourList> moreThanOneConnectionMap;
         std::map<osmium::object_id_type, NeighbourList>::iterator it;
         bool init;
 
@@ -98,43 +102,93 @@ protected:
             if (!highway)
                 return;
 
-            if (init)
-            {
-                auto startNode = way.nodes().front();
-                auto endNode = way.nodes().back();
-
+            if (init) {
                 NeighbourList *list = new NeighbourList();
 
-                list->add(endNode.ref(), way.id());
+                for (auto i = way.nodes().begin(); i != way.nodes().end(); ++i) {
 
-                map[startNode.ref()] = *list;
-            }
-            else
-            {
+                    it = moreThanOneConnectionMap.find(i->ref());
+
+                    if (it == moreThanOneConnectionMap.end())
+                        continue;
+
+
+                    map[i->ref()] = *list;
+
+
+                }
+            } else {
 
                 //i : osmium::OSMObject::const_iterator
                 // http://www.cplusplus.com/reference/map/map/find/
+
+                std::list<osmium::object_id_type> lst;
+                for (auto i = way.nodes().begin(); i != way.nodes().end(); ++i) {
+                    it = moreThanOneConnectionMap.find(i->ref());
+
+                    if (it != moreThanOneConnectionMap.end()) {
+                        lst.push_back(i->ref());
+                    }
+                }
+
+                //std::cout << "List len: " << lst.size() << "\tNodes: " << way.nodes().size() << std::endl;
+
                 for (auto i = way.nodes().begin(); i != way.nodes().end(); ++i) {
                     it = map.find(i->ref());
-                    if(it != map.end() && i->ref() != way.nodes().front().ref())
-                    {
-                        std::cout << way.nodes().front().data() << std::endl;
-                        map[i->ref()].add(way.nodes().front().ref(), way.id());
-                        map[i->ref()].add(way.nodes().back().ref(), way.id());
 
+                    if (it != map.end()) {
+                        for (std::list<osmium::object_id_type>::iterator j = lst.begin(); j != lst.end(); ++j) {
+
+                            if (*j == i->ref()) // Node i should not be able to go to node i
+                                continue;
+
+
+                            map[i->ref()].add(*j, way.id());
+
+                        }
                     }
                 }
             }
-
         }
-
-
     }; // struct GraphBuilderHandler
 
 
+    struct NodeWayAssignmentHandler : public osmium::handler::Handler {
+
+        std::map<osmium::object_id_type, NeighbourList> partOfWayMap;
+
+        void way(const osmium::Way &way)
+        {
+            const char *highway = way.tags()["highway"];
+
+            if (!highway)
+                return;
+
+
+            NeighbourList *list = new NeighbourList();
+
+
+            for (auto i = way.nodes().begin(); i != way.nodes().end(); ++i) {
+                partOfWayMap[i->ref()].add(i->ref(), way.id());
+
+            }
+        }
+
+        void DeleteSingles()
+        {
+            for (auto j = partOfWayMap.begin(); j != partOfWayMap.end(); ++j) {
+                if (j->second.length == 1) {
+                    partOfWayMap.erase(j->first);
+                }
+            }
+        }
+
+
+    }; // struct NodeWayAssignmentHandler
 
 
 private:
+
     void AddPoi(int argc, char *const *argv) const;
 
 

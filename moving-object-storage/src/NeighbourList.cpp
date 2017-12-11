@@ -15,8 +15,7 @@ NeighbourList::NeighbourList()
 
 NeighbourList::~NeighbourList()
 {
-    std::cout << "Destroyed a neighbour list" << std::endl;
-
+    //std::cout << "Destroyed a neighbour list" << std::endl;
 }
 
 void NeighbourList::add(osmium::object_id_type nodeid, osmium::object_id_type edge)

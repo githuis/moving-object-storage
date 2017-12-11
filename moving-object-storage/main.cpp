@@ -23,11 +23,12 @@ int main(int argc, char* argv[])
     Osm *osm = new Osm();
     //osm->LocationTest();
     //osm->AddPoiTest(argc, argv);
-    osm->GraphBuilderTest();
+
+    osm->GraphBuilderTest(osm->NodeWayBuilder());
 
 
+    cout << "End of running" << endl;
 
-    cout << argv[1] << endl;
 
 
 
