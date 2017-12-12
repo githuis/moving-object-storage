@@ -5,6 +5,7 @@
 
 DataStructure::DataStructure()
 {
+    EVList =EdgeVehicleList();
     //ctor
 }
 
@@ -18,34 +19,14 @@ void DataStructure::Test()
     std::cout << "Created datastructure" << std::endl;
 }
 
-
-std::tuple<int, int> DataStructure::testTra()
+Trajectory_t DataStructure::testTra()
 {
-    return std::make_tuple(2,23);
-}
+    auto x = std::vector<std::tuple<osmium::object_id_type, long>>();
+    x.push_back(std::make_tuple(30249577, 0));
+    x.push_back(std::make_tuple(7867288, 2));
+    x.push_back(std::make_tuple(30249577, 4));
 
-DataStructure::DataStructure(Trajectory_t currentTrajectory)
-{
-    current = currentTrajectory;
-}
-
-DataStructure::DataStructure(List_Trajectory_t plannedTrajectory)
-{
-    planned = plannedTrajectory;
-
-}
-
-DataStructure::DataStructure(Trajectory_t currentTrajectory, List_Trajectory_t plannedTrajectory)
-{
-    current = currentTrajectory;
-    planned = plannedTrajectory;
-
-}
-
-void DataStructure::MakeTest()
-{
-//    current = new Trajectory_t(2,2);
-
+    return x;
 }
 
 

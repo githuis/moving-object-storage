@@ -131,7 +131,8 @@ osmium::object_id_type Osm::FindClosestWay(std::string file, osmium::Location ta
     std::cout << "Closest way id is: " << handler.closestWayId << std::endl;
 }
 
-void Osm::GraphBuilderTest(std::map<osmium::object_id_type, NeighbourList> verticies)
+std::map<osmium::object_id_type, NeighbourList> Osm::GraphBuilder(
+        std::map<osmium::object_id_type, NeighbourList> verticies)
 {
     std::string fileName = "map.osm";
     osmium::io::Reader reader{fileName, osmium::osm_entity_bits::node | osmium::osm_entity_bits::way};
@@ -155,7 +156,9 @@ void Osm::GraphBuilderTest(std::map<osmium::object_id_type, NeighbourList> verti
 
     osmium::apply(readerTwo, locationHandlerTwo, handler);
 
-    std::cout << "Memes" << std::endl;
+    std::cout << "Built ajecency list" << std::endl;
+
+    return handler.map;
 }
 
 //Returns all nodes which are connected to more than a single way
@@ -173,6 +176,8 @@ std::map<osmium::object_id_type, NeighbourList> Osm::NodeWayBuilder()
 
     handler.DeleteSingles();
     handler.DeleteSingles();
+
+    std::cout << "Built node array" << std::endl;
 
     return handler.partOfWayMap;
 }

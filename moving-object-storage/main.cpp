@@ -10,21 +10,19 @@ int main(int argc, char* argv[])
 {
     cout << "Hello" << endl;
     DataStructure *ds = new DataStructure();
-    ds->Test();
 
-    int time;
-    int eID;
-    tie(eID,time) = ds -> testTra();
 
-    cout << "Edge id: " << eID << " At time: " << time << endl;
-
+    Trajectory_t testTrajectory = ds->testTra();
+    auto res = GetEdge(testTrajectory[0]);
 
     //Test Osmium
     Osm *osm = new Osm();
     //osm->LocationTest();
     //osm->AddPoiTest(argc, argv);
 
-    osm->GraphBuilderTest(osm->NodeWayBuilder());
+
+    NodeMapGraph graph = osm->GraphBuilder(osm->NodeWayBuilder());
+
 
 
     cout << "End of running" << endl;

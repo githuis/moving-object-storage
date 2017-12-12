@@ -7,13 +7,16 @@
 #include <cmath>
 #include <map>
 #include <osmium/osm/types.hpp>
+#include <vector>
 #include "NeighbourList.h"
 
+#define Trajectory_t std::vector<std::tuple<osmium::object_id_type, long>>
+#define EdgeVehicleList vector<tuple<osmium::object_id_type, vector<Vehicle*>>>
+#define GetEdge(X) std::get<0>(X)
+#define GetTime(X) std::get<1>(X)
+#define Vehicle std::tuple<long, Trajectory_t>
 
-#define Trajectory_t std::list<osmium::object_id_type>
-#define List_Trajectory_t std::list<Trajectory_t>
-#define Vehicle std::tuple<uint64_t,Trajectory_t>
-#define Nodemap_t std::map<osmium::object_id_type, GraphNode*>
+using namespace std;
 
 class DataStructure {
 
@@ -21,31 +24,26 @@ class DataStructure {
 public:
     DataStructure();
 
-    Nodemap_t NodeMap;
+    EdgeVehicleList EVList;
 
-    explicit DataStructure(Trajectory_t currentTrajectory);
-
-    explicit DataStructure(List_Trajectory_t plannedTrajectory);
-
-    DataStructure(Trajectory_t currentTrajectory, List_Trajectory_t plannedTrajectory);
+    void AddEdgeToEVList(osmium::object_id_type edgeid);
+    void AddVehicleToEVList(osmium::object_id_type edgeid, Vehicle v);
 
     virtual ~DataStructure();
 
     static void Test();
 
     //Trajectory
-    std::tuple<int, int> testTra();
+    Trajectory_t testTra();
 
     void MakeTest();
 
-    Trajectory_t current;
-    List_Trajectory_t planned;
 
 
     //Vehicle
-    std::tuple<int, Trajectory_t > testVec();
+    tuple<long, Trajectory_t > testVec();
 
-    void MakeVechicle();
+    Vehicle MakeVechicle();
 
     //Accessors
 

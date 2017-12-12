@@ -12,6 +12,7 @@
 #include "NeighbourList.h"
 #include <list>
 
+#define NodeMapGraph std::map<osmium::object_id_type, NeighbourList>
 
 class Osm {
 public:
@@ -21,15 +22,16 @@ public:
 
     void LocationTest();
 
-    void GraphBuilderTest(std::map<osmium::object_id_type, NeighbourList> verticies);
+    NodeMapGraph GraphBuilder(std::map<osmium::object_id_type, NeighbourList> verticies); //Builds neighbours
 
-    std::map<osmium::object_id_type, NeighbourList> NodeWayBuilder();
+    NodeMapGraph NodeWayBuilder(); //Builds first array of nides
 
     osmium::object_id_type FindClosestWay(std::string file, osmium::Location target);
 
 
 protected:
 
+    //TODO cars on edge list herepls
 
     //Taken from RoadLengthHandler in the roadlength osmium example.
     //Finds the closest node in a way
@@ -101,6 +103,14 @@ protected:
 
             if (!highway)
                 return;
+
+            //We don't want to include cycleways, so if the highway is a cycleway, skip it.
+            if(std::string(highway) == cycleHighWayTag)
+            {
+                //std::cout << "IT'S A CYCLEWAY, GET OUT" << std::endl;
+
+                return;
+            }
 
             if (init) {
                 NeighbourList *list = new NeighbourList();
