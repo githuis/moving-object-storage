@@ -9,6 +9,7 @@
 #include <osmium/osm/types.hpp>
 #include <vector>
 #include "NeighbourList.h"
+#include "Osm.h"
 
 #define Trajectory_t std::vector<std::tuple<osmium::object_id_type, long>>
 #define EdgeVehicleList vector<tuple<osmium::object_id_type, vector<Vehicle*>>>
@@ -26,7 +27,10 @@ public:
 
     EdgeVehicleList EVList;
 
+    EdgeVehicleList EVListBuilder(NodeMapGraph graph);
+
     void AddEdgeToEVList(osmium::object_id_type edgeid);
+
     void AddVehicleToEVList(osmium::object_id_type edgeid, Vehicle v);
 
     virtual ~DataStructure();
@@ -39,9 +43,8 @@ public:
     void MakeTest();
 
 
-
     //Vehicle
-    tuple<long, Trajectory_t > testVec();
+    tuple<long, Trajectory_t> testVec();
 
     Vehicle MakeVechicle();
 

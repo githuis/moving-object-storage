@@ -213,9 +213,9 @@ protected:
             NeighbourList *list = new NeighbourList();
 
 
-            for (auto i = way.nodes().begin(); i != way.nodes().end(); ++i) {
+            for (auto i = way.nodes().begin(); i != way.nodes().end(); ++i)
+            {
                 partOfWayMap[i->ref()].add(i->ref(), way.id());
-
             }
         }
 

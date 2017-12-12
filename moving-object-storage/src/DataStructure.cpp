@@ -29,6 +29,20 @@ Trajectory_t DataStructure::testTra()
     return x;
 }
 
+EdgeVehicleList DataStructure::EVListBuilder(NodeMapGraph graph)
+{
+    auto x = vector<tuple<osmium::object_id_type, vector<tuple<long, vector<tuple<osmium::object_id_type, long>>> *>>>();
+    std::map<osmium::object_id_type, NeighbourList>::iterator it;
+
+    for (it = graph.begin(); it != graph.end(); ++it)
+    {
+        auto y = vector<Vehicle*>();
+        x.push_back(make_tuple(it->first, y));
+
+    }
+    
+}
+
 
 
 

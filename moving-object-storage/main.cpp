@@ -23,6 +23,8 @@ int main(int argc, char* argv[])
 
     NodeMapGraph graph = osm->GraphBuilder(osm->NodeWayBuilder());
 
+    ds->EVList = ds->EVListBuilder(graph);
+
 
 
     cout << "End of running" << endl;
