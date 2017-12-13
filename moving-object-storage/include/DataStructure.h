@@ -44,8 +44,8 @@ public:
 
     //Trajectory
     Trajectory_t testTra();
-    vector<tuple<osmium::object_id_type, long>> FindAllEdgesWithArrivalTime(Trajectory_t traj);
-    //vector<tuple<osmium::object_id_type, long>> FindAllEdgesWithArrivalTime(vector<tuple<osmium::object_id_type, long>> traj);
+
+    vector<osmium::object_id_type> FindAllEdges(Trajectory_t traj);
 
     //Vehicle
     tuple<long, Trajectory_t> testVec();

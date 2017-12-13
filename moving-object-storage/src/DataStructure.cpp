@@ -35,7 +35,7 @@ EdgeVehicleList DataStructure::EVListBuilder(vector<osmium::object_id_type> allW
     auto x = map<osmium::object_id_type, EdgeVehicleRefrence>();
 
     for (int i = 0; i < allWays.size(); ++i) {
-        vector<tuple<Vehicle *, long>> y = vector<tuple<Vehicle *, long>>();
+        vector<Vehicle *> y = vector<Vehicle *>();
 
         //TODO it->first is a node, we should find all ways
         auto EVR = EdgeVehicleRefrence(allWays[i]);
@@ -71,28 +71,26 @@ void DataStructure::AddVehicleToEVList(Vehicle v)
 
     auto it = map<osmium::object_id_type, EdgeVehicleRefrence>::iterator();
 
-    auto list = this->FindAllEdgesWithArrivalTime(v.trajectory);
+    auto list = this->FindAllEdges(v.trajectory);
 
     for (int i = 0; i < list.size(); ++i) {
 
-        it = EVList.find(get<0>(list[i]));
+        it = EVList.find(list[i]);
         if(it != EVList.end())
         {
-            auto carWithArrivalTime = make_tuple(&v, get<1>(list[i]));
-            EVList[get<0>(list[i])].vehicles.push_back(carWithArrivalTime);
+            EVList[list[i]].vehicles.push_back(&v);
         } else{
             cout << "Edge not found!" << endl;
         }
     }
 }
 
-vector<tuple<osmium::object_id_type, long>> DataStructure::FindAllEdgesWithArrivalTime(Trajectory_t traj)
+vector<osmium::object_id_type> DataStructure::FindAllEdges(Trajectory_t traj)
 {
-    auto list = vector<tuple<osmium::object_id_type, long>>();
+    auto list = vector<osmium::object_id_type>();
 
     for (int i = 0; i < traj.size(); ++i) {
-        auto x = make_tuple((long &&)get<0>(traj[i]), get<1>(traj[i]));
-        list.push_back(x);
+        list.push_back((long &&)get<0>(traj[i]));
     }
 
     return list;

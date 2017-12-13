@@ -22,7 +22,7 @@ public:
 
     osmium::object_id_type edge{(long) -1};
     //           Vehicle  , When   it is here
-    vector<tuple<Vehicle *, long>> vehicles;
+    vector<Vehicle *> vehicles;
 };
 
 
