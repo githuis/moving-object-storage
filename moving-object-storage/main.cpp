@@ -23,9 +23,14 @@ int main(int argc, char* argv[])
 
     NodeMapGraph graph = osm->GraphBuilder(osm->NodeWayBuilder());
 
-    ds->EVList = ds->EVListBuilder(graph);
+    ds->EVList = ds->EVListBuilder(osm->AllWays);
+
+    EdgeVehicleList *EVPointer = &ds->EVList;
+
+    Vehicle testVehicle = Vehicle(1, testTrajectory);
 
 
+    ds->AddVehicleToEVList(testVehicle);
 
     cout << "End of running" << endl;
 

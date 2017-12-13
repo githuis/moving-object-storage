@@ -18,6 +18,8 @@ class Osm {
 public:
     Osm();
 
+    std::vector<osmium::object_id_type> AllWays;
+
     void AddPoiTest(int argc, char **argv);
 
     void LocationTest();
@@ -94,6 +96,7 @@ protected:
 
         std::map<osmium::object_id_type, NeighbourList> map;
         std::map<osmium::object_id_type, NeighbourList> moreThanOneConnectionMap;
+        std::vector<osmium::object_id_type> allWays;
         std::map<osmium::object_id_type, NeighbourList>::iterator it;
         bool init;
 
@@ -113,6 +116,8 @@ protected:
             }
 
             if (init) {
+                allWays.push_back(way.id());
+
                 NeighbourList *list = new NeighbourList();
 
                 for (auto i = way.nodes().begin(); i != way.nodes().end(); ++i) {

@@ -1,6 +1,13 @@
 #ifndef DATASTRUCTURE_H
 #define DATASTRUCTURE_H
 
+#define Trajectory_t std::vector<std::tuple<osmium::object_id_type, long>>
+#define EdgeVehicleList map<osmium::object_id_type, EdgeVehicleRefrence>
+#define GetEdge(X) std::get<0>(X)
+#define GetTime(X) std::get<1>(X)
+//#define Vehicle std::tuple<long, Trajectory_t>
+
+
 #include <string>
 #include <list>
 #include <tuple>
@@ -10,12 +17,9 @@
 #include <vector>
 #include "NeighbourList.h"
 #include "Osm.h"
+#include "Vehicle.h"
+#include "EdgeVehicleRefrence.h"
 
-#define Trajectory_t std::vector<std::tuple<osmium::object_id_type, long>>
-#define EdgeVehicleList vector<tuple<osmium::object_id_type, vector<Vehicle*>>>
-#define GetEdge(X) std::get<0>(X)
-#define GetTime(X) std::get<1>(X)
-#define Vehicle std::tuple<long, Trajectory_t>
 
 using namespace std;
 
@@ -25,13 +29,14 @@ class DataStructure {
 public:
     DataStructure();
 
+    //<editor-fold desc="Edge Vehicle List stuff">
     EdgeVehicleList EVList;
 
-    EdgeVehicleList EVListBuilder(NodeMapGraph graph);
 
-    void AddEdgeToEVList(osmium::object_id_type edgeid);
+    EdgeVehicleList EVListBuilder(vector<osmium::object_id_type> allWays);
 
-    void AddVehicleToEVList(osmium::object_id_type edgeid, Vehicle v);
+    void AddVehicleToEVList(Vehicle v);
+    //</editor-fold>
 
     virtual ~DataStructure();
 
@@ -39,9 +44,8 @@ public:
 
     //Trajectory
     Trajectory_t testTra();
-
-    void MakeTest();
-
+    vector<tuple<osmium::object_id_type, long>> FindAllEdgesWithArrivalTime(Trajectory_t traj);
+    //vector<tuple<osmium::object_id_type, long>> FindAllEdgesWithArrivalTime(vector<tuple<osmium::object_id_type, long>> traj);
 
     //Vehicle
     tuple<long, Trajectory_t> testVec();
