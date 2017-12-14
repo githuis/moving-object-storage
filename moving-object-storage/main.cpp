@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
     else
         NodeMapGraph graph = osm->GraphBuilder(osm->NodeWayBuilder("denmark-latest.osm.pbf"), "denmark-latest.osm.pbf");
 
-    ds->EVList = ds->EVListBuilder(osm->AllWays);
+    ds->EVList = ds->EVListBuilder(osm->AllWays, osm->IdealCost);
 
     EdgeVehicleList *EVPointer = &ds->EVList;
 

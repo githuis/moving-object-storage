@@ -29,7 +29,7 @@ Trajectory_t DataStructure::testTra()
     return x;
 }
 
-EdgeVehicleList DataStructure::EVListBuilder(vector<osmium::object_id_type> allWays)
+EdgeVehicleList DataStructure::EVListBuilder(vector<osmium::object_id_type> allWays, vector<long> idealCost)
 {
     //auto x = vector<tuple<osmium::object_id_type, vector<tuple<long, vector<tuple<osmium::object_id_type, long>*>> *>>>();
     auto x = map<osmium::object_id_type, EdgeVehicleRefrence>();
@@ -40,6 +40,8 @@ EdgeVehicleList DataStructure::EVListBuilder(vector<osmium::object_id_type> allW
         //TODO it->first is a node, we should find all ways
         auto EVR = EdgeVehicleRefrence(allWays[i]);
         EVR.vehicles = y;
+        EVR.idealCost = idealCost[i];
+
         x[allWays[i]] = EVR;
     }
 

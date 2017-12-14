@@ -58,8 +58,7 @@ protected:
             if (highway) {
                 for (auto i = way.nodes().begin(); i != way.nodes().end(); ++i) {
                     //i->location().x//
-                    double dist = distanceCalculate(i->location().x(), i->location().y(), targetLocation.x(),
-                                                    targetLocation.y());
+                    double dist = osmium::geom::haversine::distance(i->location(), targetLocation);
 
                     if (name == "Selma Lagerløfs Vej") {
                         std::cout << " Id: " << way.id() << " Distance: " << (dist / 100000000) << std::endl;
@@ -78,19 +77,6 @@ protected:
         }
 
     }; // struct ClosestWayHandler
-
-    //From http://www.cplusplus.com/forum/beginner/178293/
-    static double distanceCalculate(double x1, double y1, double x2, double y2)
-    {
-        double x = x2 - x1; //calculating number to square in next step
-        double y = y2 - y1;
-        double dist;
-
-        dist = pow(x, 2) + pow(y, 2);       //calculating Euclidean distance
-        dist = sqrt(dist);
-
-        return dist;
-    }
 
     //Taken from RoadLengthHandler in the roadlength osmium example.
     //Finds all intersection nodes
@@ -120,7 +106,7 @@ protected:
 
             if (init) {
                 allWays.push_back(way.id());
-                idealCost.push_back(osmium::geom::haversine::distance(way));
+                idealCost.push_back(osmium::geom::haversine::distance(way.nodes()));
 
                 NeighbourList *list = new NeighbourList();
 
