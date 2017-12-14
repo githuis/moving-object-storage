@@ -24,9 +24,9 @@ public:
 
     void LocationTest();
 
-    NodeMapGraph GraphBuilder(std::map<osmium::object_id_type, NeighbourList> verticies); //Builds neighbours
+    NodeMapGraph GraphBuilder(std::map<osmium::object_id_type, NeighbourList> verticies, std::string fileName); //Builds neighbours
 
-    NodeMapGraph NodeWayBuilder(); //Builds first array of nides
+    NodeMapGraph NodeWayBuilder(std::string fileName); //Builds first array of nodes
 
     osmium::object_id_type FindClosestWay(std::string file, osmium::Location target);
 

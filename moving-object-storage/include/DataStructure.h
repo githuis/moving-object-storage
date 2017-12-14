@@ -35,7 +35,13 @@ public:
 
     EdgeVehicleList EVListBuilder(vector<osmium::object_id_type> allWays);
 
-    void AddVehicleToEVList(Vehicle v);
+    void Insert(Vehicle v);
+    void UpdateVehicleTime(Vehicle v, long deltaTime);
+    void UpdateVehicleTrajectory(Vehicle v, Trajectory_t newTrajectory);
+    void DeleteVehicleFromEVList(Vehicle v);
+    void DeleteVehicleFromEdge(Vehicle v, osmium::object_id_type edgeId);
+    long GetNumCarsTotal(osmium::object_id_type edgeId);
+    long GetNumCarsInSeconds(osmium::object_id_type edgeId, long time);
     //</editor-fold>
 
     virtual ~DataStructure();
@@ -58,17 +64,19 @@ public:
 protected:
 
 private:
+
+    bool EdgeInEVList(osmium::object_id_type edgeId);
     //Vehicle
-    void Insert(Vehicle vehicle, Trajectory_t trajectory);
+    //void Insert(Vehicle vehicle, Trajectory_t trajectory);
 
-    void Delete(Vehicle vehicle);
+//    void Delete(Vehicle vehicle);
 
-    void TrajectoryUpdate(Vehicle vehicle);
+//    void TrajectoryUpdate(Vehicle vehicle);
 
     //void GetGridCell(std::tuple<uint64_t, std::tuple<uint64_t, uint64_t>> currentVehicle);
     //void GetNestedGridCell();
 
-    void GetCars(); //på en traj?
+//    void GetCars(); //på en traj?
 };
 
 #endif // DATASTRUCTURE_H

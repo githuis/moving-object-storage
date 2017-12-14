@@ -10,6 +10,8 @@
 #include <tuple>
 #include <vector>
 
+using namespace std;
+
 
 class Vehicle {
 
@@ -31,24 +33,24 @@ public:
         trajectory = traj;
     }
 
-    //Vehicle(long id, Trajectory_t traj)
-    //{
-    //    Id = id;
-    //    trajectory = traj;
-    //    //for (int i = 0; i < evref->size(); ++i) {
-    //    //    if(evref[0][i].edge
-    //    //}
-    //}
-
-
     void UpdateTrajectory(std::vector<std::tuple<osmium::object_id_type, long>> newTrajectory)
     {
-        this->trajectory = newTrajectory;
+        for (auto &i : trajectory ) {
+
+
+        }
+
+        trajectory = newTrajectory;
+
+
     }
 
     void UpdateTime(long deltaTime)
     {
         //for each edge in trajectory time += deltaTime.
+        for (int i = 0; i < trajectory.size(); ++i) {
+            get<1>(trajectory[i]) += deltaTime;
+        }
     }
 };
 

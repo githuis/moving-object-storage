@@ -61,7 +61,7 @@ EdgeVehicleList DataStructure::EVListBuilder(vector<osmium::object_id_type> allW
     return x;
 }
 
-void DataStructure::AddVehicleToEVList(Vehicle v)
+void DataStructure::Insert(Vehicle v)
 {
     if(v.trajectory.empty() || v.trajectory.size() == 0)
     {
@@ -97,6 +97,55 @@ vector<osmium::object_id_type> DataStructure::FindAllEdges(Trajectory_t traj)
 
 
     //return vector<vector<tuple<osmium::object_id_type, long>>>();
+}
+
+void DataStructure::UpdateVehicleTrajectory(Vehicle v, Trajectory_t newTrajectory)
+{
+    DeleteVehicleFromEVList(v);
+    v.UpdateTrajectory(newTrajectory);
+    Insert(v);
+}
+
+void DataStructure::DeleteVehicleFromEdge(Vehicle v, osmium::object_id_type edgeId)
+{
+    vector<Vehicle *>::iterator vit;
+
+    if(EdgeInEVList(edgeId))
+        remove(EVList[edgeId].vehicles.begin(), EVList[edgeId].vehicles.end(), &v);
+}
+
+void DataStructure::DeleteVehicleFromEVList(Vehicle v)
+{
+    for (auto i : v.trajectory) {
+        DeleteVehicleFromEdge(v, get<0>(i));
+    }
+}
+
+void DataStructure::UpdateVehicleTime(Vehicle v, long deltaTime)
+{
+    v.UpdateTime(deltaTime);
+}
+
+long DataStructure::GetNumCarsTotal(osmium::object_id_type edgeId)
+{
+    if(EdgeInEVList(edgeId))
+    {
+        return EVList[edgeId].vehicles.size();
+    }
+
+}
+
+bool DataStructure::EdgeInEVList(osmium::object_id_type edgeId)
+{
+    auto it = EVList.find(edgeId);
+
+    return (it != EVList.end());
+}
+
+long DataStructure::GetNumCarsInSeconds(osmium::object_id_type edgeId, long time)
+{
+    //TODO implement
+    return 0;
 }
 
 

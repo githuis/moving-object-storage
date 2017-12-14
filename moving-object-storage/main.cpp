@@ -4,6 +4,8 @@
 #include <string>
 #include <tuple>
 
+#define QUICK_RUN true
+
 using namespace std;
 
 int main(int argc, char* argv[])
@@ -21,7 +23,10 @@ int main(int argc, char* argv[])
     //osm->AddPoiTest(argc, argv);
 
 
-    NodeMapGraph graph = osm->GraphBuilder(osm->NodeWayBuilder());
+    if(QUICK_RUN)
+        NodeMapGraph graph = osm->GraphBuilder(osm->NodeWayBuilder("map.osm"), "map.osm");
+    else
+        NodeMapGraph graph = osm->GraphBuilder(osm->NodeWayBuilder("denmark-latest.osm.pbf"), "denmark-latest.osm.pbf");
 
     ds->EVList = ds->EVListBuilder(osm->AllWays);
 
@@ -30,7 +35,8 @@ int main(int argc, char* argv[])
     Vehicle testVehicle = Vehicle(1, testTrajectory);
 
 
-    ds->AddVehicleToEVList(testVehicle);
+    ds->Insert(testVehicle);
+    testVehicle.UpdateTime(4);
 
     cout << "End of running" << endl;
 
