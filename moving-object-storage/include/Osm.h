@@ -8,6 +8,7 @@
 
 #include <osmium/handler.hpp>
 #include <osmium/handler/node_locations_for_ways.hpp>
+#include <osmium/geom/haversine.hpp>
 #include <iostream>
 #include "NeighbourList.h"
 #include <list>
@@ -19,6 +20,7 @@ public:
     Osm();
 
     std::vector<osmium::object_id_type> AllWays;
+    std::vector<long> IdealCost;
 
     void AddPoiTest(int argc, char **argv);
 
@@ -97,6 +99,7 @@ protected:
         std::map<osmium::object_id_type, NeighbourList> map;
         std::map<osmium::object_id_type, NeighbourList> moreThanOneConnectionMap;
         std::vector<osmium::object_id_type> allWays;
+        std::vector<long> idealCost;
         std::map<osmium::object_id_type, NeighbourList>::iterator it;
         bool init;
 
@@ -117,6 +120,7 @@ protected:
 
             if (init) {
                 allWays.push_back(way.id());
+                idealCost.push_back(osmium::geom::haversine::distance(way));
 
                 NeighbourList *list = new NeighbourList();
 

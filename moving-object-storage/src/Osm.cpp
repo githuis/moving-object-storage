@@ -159,6 +159,8 @@ std::map<osmium::object_id_type, NeighbourList> Osm::GraphBuilder(
     std::cout << "Built ajecency list" << std::endl;
 
     this->AllWays = handler.allWays;
+    //TODO Use cost function
+    this->IdealCost = handler.idealCost;
 
     return handler.map;
 }

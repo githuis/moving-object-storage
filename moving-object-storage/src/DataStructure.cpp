@@ -142,12 +142,6 @@ bool DataStructure::EdgeInEVList(osmium::object_id_type edgeId)
     return (it != EVList.end());
 }
 
-long DataStructure::GetNumCarsInSeconds(osmium::object_id_type edgeId, long time)
-{
-    //TODO implement
-    return 0;
-}
-
 
 
 

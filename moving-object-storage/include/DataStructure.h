@@ -2,7 +2,7 @@
 #define DATASTRUCTURE_H
 
 #define Trajectory_t std::vector<std::tuple<osmium::object_id_type, long>>
-#define EdgeVehicleList map<osmium::object_id_type, EdgeVehicleRefrence>
+#define EdgeVehicleList map<osmium::object_id_type, EdgeVehicleRefrence, long>
 #define GetEdge(X) std::get<0>(X)
 #define GetTime(X) std::get<1>(X)
 //#define Vehicle std::tuple<long, Trajectory_t>
@@ -31,7 +31,6 @@ public:
 
     //<editor-fold desc="Edge Vehicle List stuff">
     EdgeVehicleList EVList;
-
 
     EdgeVehicleList EVListBuilder(vector<osmium::object_id_type> allWays);
 
