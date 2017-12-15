@@ -4,7 +4,7 @@
 #include <string>
 #include <tuple>
 
-#define QUICK_RUN false
+#define QUICK_RUN true
 
 using namespace std;
 
@@ -22,11 +22,11 @@ int main(int argc, char* argv[])
     //osm->LocationTest();
     //osm->AddPoiTest(argc, argv);
 
-
-    if(QUICK_RUN)
+#if QUICK_RUN
         NodeMapGraph graph = osm->GraphBuilder(osm->NodeWayBuilder("map.osm"), "map.osm");
-    else
+#else
         NodeMapGraph graph = osm->GraphBuilder(osm->NodeWayBuilder("denmark-latest.osm.pbf"), "denmark-latest.osm.pbf");
+#endif
 
     ds->EVList = ds->EVListBuilder(osm->AllWays, osm->IdealCost);
 

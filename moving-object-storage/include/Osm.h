@@ -20,7 +20,7 @@ public:
     Osm();
 
     std::vector<osmium::object_id_type> AllWays;
-    std::vector<long> IdealCost;
+    std::vector<std::tuple<double, double>> IdealCost;
 
     void AddPoiTest(int argc, char **argv);
 
@@ -36,7 +36,6 @@ public:
 
 protected:
 
-    //TODO cars on edge list herepls
 
     //Taken from RoadLengthHandler in the roadlength osmium example.
     //Finds the closest node in a way
@@ -84,7 +83,7 @@ protected:
         std::map<osmium::object_id_type, NeighbourList> map;
         std::map<osmium::object_id_type, NeighbourList> moreThanOneConnectionMap;
         std::vector<osmium::object_id_type> allWays;
-        std::vector<long> idealCost;
+        std::vector<std::tuple<double, double >> idealCostAndLength;
         std::map<osmium::object_id_type, NeighbourList>::iterator it;
         bool init;
 
@@ -92,18 +91,17 @@ protected:
         {
             const char *highway = way.tags()["highway"];
 
-            if (!highway)
-                return;
-
             //We don't want to include non roads
-            std::string tag = std::string(highway);
-            if (std::find(ignoreTags->begin(), ignoreTags->end(), tag) != ignoreTags->end()) {
+            if(!highway || !ViableNode(std::string(highway)))
+            {
                 return;
             }
 
+
             if (init) {
                 allWays.push_back(way.id());
-                idealCost.push_back(osmium::geom::haversine::distance(way.nodes()));
+                double dist = osmium::geom::haversine::distance(way.nodes());
+                idealCostAndLength.push_back(std::make_tuple(dist,dist));//TODO apply cost func to first element here
 
                 NeighbourList *list = new NeighbourList();
 
@@ -191,15 +189,11 @@ protected:
         {
             const char *highway = way.tags()["highway"];
 
-            if (!highway)
-                return;
-
             //We don't want to include non roads
-            std::string tag = std::string(highway);
-            if (std::find(ignoreTags->begin(), ignoreTags->end(), tag) != ignoreTags->end()) {
+            if(!highway || !ViableNode(std::string(highway)))
+            {
                 return;
             }
-
             NeighbourList *list = new NeighbourList();
 
 
@@ -227,6 +221,15 @@ private:
     static const std::string ignoreTags[];
 
     void AddPoi(int argc, char *const *argv) const;
+
+    static bool ViableNode(std::string tag)
+    {
+        for (int i = 0; i < ignoreTags->size(); ++i) {
+            if(tag == ignoreTags[i])
+                return false;
+        }
+        return true;
+    }
 
 
 };

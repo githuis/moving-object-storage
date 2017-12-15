@@ -2,7 +2,7 @@
 #define DATASTRUCTURE_H
 
 #define Trajectory_t std::vector<std::tuple<osmium::object_id_type, long>>
-#define EdgeVehicleList map<osmium::object_id_type, EdgeVehicleRefrence>
+#define EdgeVehicleList map<osmium::object_id_type, EdgeVehicleReference>
 #define GetEdge(X) std::get<0>(X)
 #define GetTime(X) std::get<1>(X)
 //#define Vehicle std::tuple<long, Trajectory_t>
@@ -18,7 +18,7 @@
 #include "NeighbourList.h"
 #include "Osm.h"
 #include "Vehicle.h"
-#include "EdgeVehicleRefrence.h"
+#include "EdgeVehicleReference.h"
 
 
 using namespace std;
@@ -32,7 +32,7 @@ public:
     //<editor-fold desc="Edge Vehicle List stuff">
     EdgeVehicleList EVList;
 
-    EdgeVehicleList EVListBuilder(vector<osmium::object_id_type> allWays, vector<long> idealCost);
+    EdgeVehicleList EVListBuilder(vector<osmium::object_id_type> allWays, vector<tuple<double, double>> costAndLength);
 
     void Insert(Vehicle v);
     void UpdateVehicleTime(Vehicle v, long deltaTime);
@@ -42,6 +42,9 @@ public:
     long GetNumCarsTotal(osmium::object_id_type edgeId);
     long GetNumCarsInSeconds(osmium::object_id_type edgeId, long time);
     //</editor-fold>
+
+
+    //double CostCalc(double length) //TODO implement
 
     virtual ~DataStructure();
 
@@ -65,6 +68,8 @@ protected:
 private:
 
     bool EdgeInEVList(osmium::object_id_type edgeId);
+
+
     //Vehicle
     //void Insert(Vehicle vehicle, Trajectory_t trajectory);
 

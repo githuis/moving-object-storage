@@ -19,6 +19,7 @@ public:
 
     long Id = -1; //-1 means uninitialized!
     std::vector<std::tuple<osmium::object_id_type, long>> trajectory{};
+    map<osmium::object_id_type, long*> trajectoryMap{};
 
     Vehicle() = default;
 
@@ -31,13 +32,16 @@ public:
     {
         Id = id;
         trajectory = traj;
+        for (auto i : traj) {
+            trajectoryMap[get<0>(i)] = &get<1>(i);
+        }
     }
 
     void UpdateTrajectory(std::vector<std::tuple<osmium::object_id_type, long>> newTrajectory)
     {
+        trajectoryMap.empty();
         for (auto &i : trajectory ) {
-
-
+            trajectoryMap[get<0>(i)] = &get<1>(i);
         }
 
         trajectory = newTrajectory;

@@ -11,20 +11,21 @@
 
 using namespace std;
 
-class EdgeVehicleRefrence {
+class EdgeVehicleReference {
 
 public:
-    EdgeVehicleRefrence()= default;
-    explicit EdgeVehicleRefrence(osmium::object_id_type id)
+    EdgeVehicleReference()= default;
+    explicit EdgeVehicleReference(osmium::object_id_type id)
     {
         edge = id;
     }
 
     osmium::object_id_type edge{(long) -1};
     //           Vehicle  , When   it is here
-    long idealCost = std::numeric_limits<long>::infinity();
+    double idealCost = std::numeric_limits<double>::infinity();
     vector<Vehicle *> vehicles;
 
+    double length;
 };
 
 

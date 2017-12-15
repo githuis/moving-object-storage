@@ -1,6 +1,7 @@
 #include <iostream>
 #include <tuple>
 #include <functional>
+#include <algorithm>
 #include "../include/DataStructure.h"
 
 DataStructure::DataStructure()
@@ -29,18 +30,18 @@ Trajectory_t DataStructure::testTra()
     return x;
 }
 
-EdgeVehicleList DataStructure::EVListBuilder(vector<osmium::object_id_type> allWays, vector<long> idealCost)
+EdgeVehicleList DataStructure::EVListBuilder(vector<osmium::object_id_type> allWays, vector<tuple<double, double>> costAndLength)
 {
     //auto x = vector<tuple<osmium::object_id_type, vector<tuple<long, vector<tuple<osmium::object_id_type, long>*>> *>>>();
-    auto x = map<osmium::object_id_type, EdgeVehicleRefrence>();
+    auto x = map<osmium::object_id_type, EdgeVehicleReference>();
 
     for (int i = 0; i < allWays.size(); ++i) {
         vector<Vehicle *> y = vector<Vehicle *>();
 
-        //TODO it->first is a node, we should find all ways
-        auto EVR = EdgeVehicleRefrence(allWays[i]);
+        auto EVR = EdgeVehicleReference(allWays[i]);
         EVR.vehicles = y;
-        EVR.idealCost = idealCost[i];
+        EVR.idealCost = get<0>(costAndLength[i]);
+        EVR.length = get<1>(costAndLength[i]);
 
         x[allWays[i]] = EVR;
     }
@@ -51,8 +52,7 @@ EdgeVehicleList DataStructure::EVListBuilder(vector<osmium::object_id_type> allW
     //{
     //    vector<Vehicle*> y = vector<Vehicle*>();
 //
-    //    //TODO it->first is a node, we should find all ways
-    //    auto EVR = EdgeVehicleRefrence(it->first);
+    //    auto EVR = EdgeVehicleReference(it->first);
     //    EVR.vehicles = y;
 //
     //    x[it->first] = EVR;
@@ -71,7 +71,7 @@ void DataStructure::Insert(Vehicle v)
         return;
     }
 
-    auto it = map<osmium::object_id_type, EdgeVehicleRefrence>::iterator();
+    auto it = map<osmium::object_id_type, EdgeVehicleReference>::iterator();
 
     auto list = this->FindAllEdges(v.trajectory);
 
@@ -142,6 +142,21 @@ bool DataStructure::EdgeInEVList(osmium::object_id_type edgeId)
     auto it = EVList.find(edgeId);
 
     return (it != EVList.end());
+}
+
+long DataStructure::GetNumCarsInSeconds(osmium::object_id_type edgeId, long time)
+{
+    int cars = 0;
+    if(EdgeInEVList(edgeId))
+    {
+        for(auto v : EVList[edgeId].vehicles)
+        {
+            if(time <= *v->trajectoryMap[edgeId])
+                cars++;
+
+        }
+    }
+    return cars;
 }
 
 
