@@ -33,9 +33,10 @@ using index_type = osmium::index::map::FlexMem<osmium::unsigned_object_id_type, 
 // The location handler always depends on the index type
 using location_handler_type = osmium::handler::NodeLocationsForWays<index_type>;
 
-//For locations (x,y pairs)
 
-const std::string Osm::cycleHighWayTag = "cycleway";
+
+const std::string Osm::ignoreTags[] = {"cycleway","steps", "pedestrian", "footway", "bridleway", "path"};
+
 
 
 Osm::Osm()

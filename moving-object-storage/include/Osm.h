@@ -26,7 +26,8 @@ public:
 
     void LocationTest();
 
-    NodeMapGraph GraphBuilder(std::map<osmium::object_id_type, NeighbourList> verticies, std::string fileName); //Builds neighbours
+    NodeMapGraph GraphBuilder(std::map<osmium::object_id_type, NeighbourList> verticies,
+                              std::string fileName); //Builds neighbours
 
     NodeMapGraph NodeWayBuilder(std::string fileName); //Builds first array of nodes
 
@@ -50,8 +51,6 @@ protected:
 
         void way(const osmium::Way &way)
         {
-
-
             const char *highway = way.tags()["highway"];
             const char *name = way.tags()["name"];
 
@@ -96,11 +95,9 @@ protected:
             if (!highway)
                 return;
 
-            //We don't want to include cycleways, so if the highway is a cycleway, skip it.
-            if(std::string(highway) == cycleHighWayTag)
-            {
-                //std::cout << "IT'S A CYCLEWAY, GET OUT" << std::endl;
-
+            //We don't want to include non roads
+            std::string tag = std::string(highway);
+            if (std::find(ignoreTags->begin(), ignoreTags->end(), tag) != ignoreTags->end()) {
                 return;
             }
 
@@ -150,7 +147,7 @@ protected:
                             if (*j == i->ref()) // Node i should not be able to go to node i
                             {
                                 foundSelf = true;
-                                if(temp != -1)
+                                if (temp != -1)
                                     map[i->ref()].add(temp, way.id());
                                 continue;
                             }
@@ -197,19 +194,16 @@ protected:
             if (!highway)
                 return;
 
-            //We don't want to include cycleways, so if the highway is a cycleway, skip it.
-            if(std::string(highway) == cycleHighWayTag)
-            {
-                //std::cout << "IT'S A CYCLEWAY, GET OUT" << std::endl;
-
+            //We don't want to include non roads
+            std::string tag = std::string(highway);
+            if (std::find(ignoreTags->begin(), ignoreTags->end(), tag) != ignoreTags->end()) {
                 return;
             }
 
             NeighbourList *list = new NeighbourList();
 
 
-            for (auto i = way.nodes().begin(); i != way.nodes().end(); ++i)
-            {
+            for (auto i = way.nodes().begin(); i != way.nodes().end(); ++i) {
                 partOfWayMap[i->ref()].add(i->ref(), way.id());
             }
         }
@@ -229,7 +223,8 @@ protected:
 
 private:
 
-    static const std::string cycleHighWayTag;
+    static const std::string cycleHighWayTag, stepsHighWayTag, footHighWayTag, pedestrianHighWayTag;
+    static const std::string ignoreTags[];
 
     void AddPoi(int argc, char *const *argv) const;
 

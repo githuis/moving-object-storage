@@ -4,7 +4,7 @@
 #include <string>
 #include <tuple>
 
-#define QUICK_RUN true
+#define QUICK_RUN false
 
 using namespace std;
 
