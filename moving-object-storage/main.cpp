@@ -4,7 +4,7 @@
 #include <string>
 #include <tuple>
 
-#define QUICK_RUN true
+#define QUICK_RUN false
 
 using namespace std;
 
@@ -33,6 +33,8 @@ int main(int argc, char* argv[])
     EdgeVehicleList *EVPointer = &ds->EVList;
 
     Vehicle testVehicle = Vehicle(1, testTrajectory);
+
+    auto path = ds->CalculatePath(28783202, 703743906, graph);
 
 
     ds->Insert(testVehicle);

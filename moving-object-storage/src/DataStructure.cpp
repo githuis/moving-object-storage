@@ -6,7 +6,7 @@
 
 DataStructure::DataStructure()
 {
-    EVList =EdgeVehicleList();
+    EVList = EdgeVehicleList();
     //ctor
 }
 
@@ -30,7 +30,8 @@ Trajectory_t DataStructure::testTra()
     return x;
 }
 
-EdgeVehicleList DataStructure::EVListBuilder(vector<osmium::object_id_type> allWays, vector<tuple<double, double>> costAndLength)
+EdgeVehicleList DataStructure::EVListBuilder(vector<osmium::object_id_type> allWays,
+                                             vector<tuple<double, double>> costAndLength)
 {
     //auto x = vector<tuple<osmium::object_id_type, vector<tuple<long, vector<tuple<osmium::object_id_type, long>*>> *>>>();
     auto x = map<osmium::object_id_type, EdgeVehicleReference>();
@@ -65,8 +66,7 @@ EdgeVehicleList DataStructure::EVListBuilder(vector<osmium::object_id_type> allW
 
 void DataStructure::Insert(Vehicle v)
 {
-    if(v.trajectory.empty() || v.trajectory.size() == 0)
-    {
+    if (v.trajectory.empty() || v.trajectory.size() == 0) {
         cout << "Vehicle has no (an empty) trajectory!!!!" << endl;
         return;
     }
@@ -78,10 +78,9 @@ void DataStructure::Insert(Vehicle v)
     for (int i = 0; i < list.size(); ++i) {
 
         it = EVList.find(list[i]);
-        if(it != EVList.end())
-        {
+        if (it != EVList.end()) {
             EVList[list[i]].vehicles.push_back(&v);
-        } else{
+        } else {
             cout << "Edge not found!" << endl;
         }
     }
@@ -92,7 +91,7 @@ vector<osmium::object_id_type> DataStructure::FindAllEdges(Trajectory_t traj)
     auto list = vector<osmium::object_id_type>();
 
     for (int i = 0; i < traj.size(); ++i) {
-        list.push_back((long &&)get<0>(traj[i]));
+        list.push_back((long &&) get<0>(traj[i]));
     }
 
     return list;
@@ -112,7 +111,7 @@ void DataStructure::DeleteVehicleFromEdge(Vehicle v, osmium::object_id_type edge
 {
     vector<Vehicle *>::iterator vit;
 
-    if(EdgeInEVList(edgeId))
+    if (EdgeInEVList(edgeId))
         remove(EVList[edgeId].vehicles.begin(), EVList[edgeId].vehicles.end(), &v);
 }
 
@@ -130,8 +129,7 @@ void DataStructure::UpdateVehicleTime(Vehicle v, long deltaTime)
 
 long DataStructure::GetNumCarsTotal(osmium::object_id_type edgeId)
 {
-    if(EdgeInEVList(edgeId))
-    {
+    if (EdgeInEVList(edgeId)) {
         return EVList[edgeId].vehicles.size();
     }
 
@@ -147,17 +145,116 @@ bool DataStructure::EdgeInEVList(osmium::object_id_type edgeId)
 long DataStructure::GetNumCarsInSeconds(osmium::object_id_type edgeId, long time)
 {
     int cars = 0;
-    if(EdgeInEVList(edgeId))
-    {
-        for(auto v : EVList[edgeId].vehicles)
-        {
-            if(time <= *v->trajectoryMap[edgeId])
+    if (EdgeInEVList(edgeId)) {
+        for (auto v : EVList[edgeId].vehicles) {
+            if (time <= *v->trajectoryMap[edgeId])
                 cars++;
 
         }
     }
     return cars;
 }
+
+vector<osmium::object_id_type>
+DataStructure::CalculatePath(osmium::object_id_type startNode, osmium::object_id_type endNode, NodeMapGraph graph)
+{
+    auto Q = vector<osmium::object_id_type>();
+
+    map<osmium::object_id_type, long> dist;
+    map<osmium::object_id_type , osmium::object_id_type> prev;
+
+
+    for (auto i = graph.begin(); i != graph.end() ; ++i)
+    {
+        dist[i->first] = std::numeric_limits<long>::max();
+        prev[i->first] = -1;
+        Q.push_back(i->first);
+    }
+
+    dist[startNode] = 0;
+
+    auto x = dist[startNode];
+
+    while(!Q.empty())
+    {
+        osmium::object_id_type u = this->FindMinDist(&dist, &Q);
+
+        if(u == endNode)
+        {
+            vector<osmium::object_id_type> S;
+
+            while(prev[u] != -1)
+            {
+                S.insert(S.begin(),u);
+                u = prev[u];
+            }
+
+            S.insert(S.begin(), u);
+
+            return S;
+        }
+
+        Q.erase(remove(Q.begin(), Q.end(), u), Q.end());
+
+
+        auto v = graph[u].head;
+        auto inQ = InList(&v->nodeId, &Q);
+        while(v != NULL)
+        {
+            //auto v = graph[u].head;
+            auto alt = dist[u] + EVList[v->edge].idealCost;
+
+            if(alt < dist[v->nodeId])
+            {
+                dist[v->nodeId] = static_cast<long>(alt);
+                prev[v->nodeId] = u;
+            }
+            if(v->next == NULL)
+                break;
+            v = v->next;
+
+        }
+
+
+    }
+    //return path;
+}
+
+osmium::object_id_type DataStructure::FindMinDist(map<osmium::object_id_type, long> *dist, vector<osmium::object_id_type> *Q)
+{
+    long distance = std::numeric_limits<long>::max();
+    osmium::object_id_type target = -1;
+
+
+    for (auto i : *Q)
+    {
+        auto it = dist->find(i);
+
+        if(it != dist->end())
+        {
+            if(it->second < distance)
+            {
+                distance = it->second;
+                target = i;
+            }
+        }
+
+
+    }
+
+    return target;
+}
+
+bool DataStructure::InList(osmium::object_id_type *element, vector<osmium::object_id_type> *list)
+{
+
+    return true; //(find(list->begin(), list->end(), *element) != list->end());
+}
+
+
+
+
+
 
 
 

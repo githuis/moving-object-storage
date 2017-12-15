@@ -43,6 +43,7 @@ public:
     long GetNumCarsInSeconds(osmium::object_id_type edgeId, long time);
     //</editor-fold>
 
+    vector<osmium::object_id_type> CalculatePath(osmium::object_id_type startNode, osmium::object_id_type endNode, NodeMapGraph graph);
 
     //double CostCalc(double length) //TODO implement
 
@@ -68,6 +69,11 @@ protected:
 private:
 
     bool EdgeInEVList(osmium::object_id_type edgeId);
+
+    //map<osmium::object_id_type, long> ConstructGScore(osmium::object_id_type startNode, NodeMapGraph graph);
+
+    osmium::object_id_type FindMinDist(map<osmium::object_id_type, long> *dist, vector<osmium::object_id_type> *Q);
+    bool InList(osmium::object_id_type *element, vector<osmium::object_id_type> *list);
 
 
     //Vehicle
