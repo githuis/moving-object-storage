@@ -8,6 +8,7 @@
 //#define Vehicle std::tuple<long, Trajectory_t>
 #define KmhToMps / 3.6
 #define DenseKmToM / 1000
+#define NodeLocationMapPointer std::map<osmium::object_id_type, osmium::Location>
 
 
 #include <string>
@@ -36,6 +37,8 @@ public:
 
     EdgeVehicleList EVListBuilder(vector<osmium::object_id_type> allWays, vector<tuple<double, double>> costAndLength);
 
+    NodeLocationMapPointer NodeLocations;
+
     void Insert(Vehicle v);
     void UpdateVehicleTime(Vehicle v, long deltaTime);
     void UpdateVehicleTrajectory(Vehicle v, Trajectory_t newTrajectory);
@@ -49,7 +52,13 @@ public:
     CalculatePath(osmium::object_id_type startNode, osmium::object_id_type endNode, NodeMapGraph graph);
 
     vector<osmium::object_id_type>
-    CalculatePathBellmanFord(osmium::object_id_type startNode, osmium::object_id_type endNode, NodeMapGraph graph);
+    CalculatePathAStar(osmium::object_id_type startNode, osmium::object_id_type endNode, NodeMapGraph graph);
+
+    double HeuristicCost(osmium::object_id_type nodeStart, osmium::object_id_type nodeEnd);
+    bool NodeInNodeLocMap(osmium::object_id_type node);
+    vector<osmium::object_id_type>
+    ReconstructPath(map<osmium::object_id_type , osmium::object_id_type> cameFrom, osmium::object_id_type current);
+
 
     double CostCalc(osmium::object_id_type edge, long startDelay);
 
@@ -67,8 +76,8 @@ private:
 
     //map<osmium::object_id_type, long> ConstructGScore(osmium::object_id_type startNode, NodeMapGraph graph);
 
-    osmium::object_id_type FindMinDist(map<osmium::object_id_type, long> *dist, vector<osmium::object_id_type> *Q);
-    bool InList(osmium::object_id_type *element, vector<osmium::object_id_type> *list);
+    osmium::object_id_type FindMinDist(map<osmium::object_id_type, double> *dist, vector<osmium::object_id_type> *Q);
+    bool InList(osmium::object_id_type element, vector<osmium::object_id_type> list);
 
 
     static constexpr double SpeedLimit = 80 KmhToMps; //Speed limit is 80 kmh in M/s

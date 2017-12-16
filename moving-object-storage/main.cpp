@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
         NodeMapGraph graph = osm->GraphBuilder(osm->NodeWayBuilder("denmark-latest.osm.pbf"), "denmark-latest.osm.pbf");
 #endif
 
-    osm->IdealCost = ds->ApplyCostToIdealCostList(osm->IdealCost);
+    ds->NodeLocations = osm->NodeLocations;
 
 
     ds->EVList = ds->EVListBuilder(osm->AllWays, osm->IdealCost);
@@ -40,6 +40,7 @@ int main(int argc, char* argv[])
 
     //Randers node = 703743906
     auto path = ds->CalculatePath(28783202, 28785114, graph);
+   // auto path = ds->CalculatePathAStar(28783202, 1043821932, graph);
 
 
     ds->Insert(testVehicle);

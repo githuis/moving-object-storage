@@ -21,6 +21,7 @@ public:
 
     std::vector<osmium::object_id_type> AllWays;
     std::vector<std::tuple<double, double>> IdealCost;
+    std::map<osmium::object_id_type, osmium::Location> NodeLocations;
 
     void AddPoiTest(int argc, char **argv);
 
@@ -84,6 +85,7 @@ protected:
         std::map<osmium::object_id_type, NeighbourList> moreThanOneConnectionMap;
         std::vector<osmium::object_id_type> allWays;
         std::vector<std::tuple<double, double >> idealCostAndLength;
+        std::map<osmium::object_id_type, osmium::Location> nodeLoc;
         std::map<osmium::object_id_type, NeighbourList>::iterator it;
         bool init;
 
@@ -115,6 +117,7 @@ protected:
                         continue;
 
 
+                    nodeLoc[i->ref()] = i->location();
                     map[i->ref()] = *list;
 
 

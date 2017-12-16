@@ -162,6 +162,7 @@ std::map<osmium::object_id_type, NeighbourList> Osm::GraphBuilder(
     this->AllWays = handler.allWays;
     //TODO Use cost function
     this->IdealCost = handler.idealCostAndLength;
+    this->NodeLocations = handler.nodeLoc;
 
     return handler.map;
 }
