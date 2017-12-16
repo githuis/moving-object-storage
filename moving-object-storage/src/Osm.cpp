@@ -187,3 +187,4 @@ std::map<osmium::object_id_type, NeighbourList> Osm::NodeWayBuilder(std::string 
     return handler.partOfWayMap;
 }
 
+

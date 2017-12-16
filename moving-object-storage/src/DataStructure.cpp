@@ -3,6 +3,7 @@
 #include <functional>
 #include <algorithm>
 #include "../include/DataStructure.h"
+#include <math.h>
 
 DataStructure::DataStructure()
 {
@@ -13,11 +14,6 @@ DataStructure::DataStructure()
 DataStructure::~DataStructure()
 {
     //dtor
-}
-
-void DataStructure::Test()
-{
-    std::cout << "Created datastructure" << std::endl;
 }
 
 Trajectory_t DataStructure::testTra()
@@ -146,10 +142,13 @@ long DataStructure::GetNumCarsInSeconds(osmium::object_id_type edgeId, long time
 {
     int cars = 0;
     if (EdgeInEVList(edgeId)) {
-        for (auto v : EVList[edgeId].vehicles) {
-            if (time <= *v->trajectoryMap[edgeId])
-                cars++;
+        auto ev = EVList[edgeId];
+        for (auto v : ev.vehicles) {
+            auto timeSpan = ev.idealCost/2;
+            auto arrival = *v->trajectoryMap[edgeId];
 
+            if( (time-timeSpan) <= arrival && (time+timeSpan) >= arrival)
+                cars++;
         }
     }
     return cars;
@@ -159,6 +158,7 @@ vector<osmium::object_id_type>
 DataStructure::CalculatePath(osmium::object_id_type startNode, osmium::object_id_type endNode, NodeMapGraph graph)
 {
     auto Q = vector<osmium::object_id_type>();
+    bool endNodeInData = false;
 
     map<osmium::object_id_type, long> dist;
     map<osmium::object_id_type , osmium::object_id_type> prev;
@@ -166,10 +166,19 @@ DataStructure::CalculatePath(osmium::object_id_type startNode, osmium::object_id
 
     for (auto i = graph.begin(); i != graph.end() ; ++i)
     {
+
         dist[i->first] = std::numeric_limits<long>::max();
         prev[i->first] = -1;
         Q.push_back(i->first);
+
+        if(i->first == endNode)
+        {
+            endNodeInData = true;
+        }
     }
+
+    if(!endNodeInData)
+        return vector<osmium::object_id_type>();
 
     dist[startNode] = 0;
 
@@ -199,7 +208,7 @@ DataStructure::CalculatePath(osmium::object_id_type startNode, osmium::object_id
 
         auto v = graph[u].head;
         auto inQ = InList(&v->nodeId, &Q);
-        while(v != NULL)
+        while(v != NULL && inQ)
         {
             //auto v = graph[u].head;
             auto alt = dist[u] + EVList[v->edge].idealCost;
@@ -214,8 +223,68 @@ DataStructure::CalculatePath(osmium::object_id_type startNode, osmium::object_id
             v = v->next;
 
         }
+    }
+    //return path;
+}
 
 
+vector<osmium::object_id_type>
+DataStructure::CalculatePathBellmanFord(osmium::object_id_type startNode, osmium::object_id_type endNode, NodeMapGraph graph)
+{
+    auto Q = vector<osmium::object_id_type>();
+
+    map<osmium::object_id_type, long> dist;
+    map<osmium::object_id_type , osmium::object_id_type> prev;
+
+
+    for (auto i = graph.begin(); i != graph.end() ; ++i)
+    {
+        dist[i->first] = std::numeric_limits<long>::max();
+        prev[i->first] = -1;
+        Q.push_back(i->first);
+    }
+
+    dist[startNode] = 0;
+
+    while(!Q.empty())
+    {
+        osmium::object_id_type u = this->FindMinDist(&dist, &Q);
+
+        if(u == endNode)
+        {
+            vector<osmium::object_id_type> S;
+
+            while(prev[u] != -1)
+            {
+                S.insert(S.begin(),u);
+                u = prev[u];
+            }
+
+            S.insert(S.begin(), u);
+
+            return S;
+        }
+
+        Q.erase(remove(Q.begin(), Q.end(), u), Q.end());
+
+
+        auto v = graph[u].head;
+        auto inQ = InList(&v->nodeId, &Q);
+        while(v != NULL && inQ)
+        {
+            //auto v = graph[u].head;
+            auto alt = dist[u] + EVList[v->edge].idealCost;
+
+            if(alt < dist[v->nodeId])
+            {
+                dist[v->nodeId] = static_cast<long>(alt);
+                prev[v->nodeId] = u;
+            }
+            if(v->next == NULL)
+                break;
+            v = v->next;
+
+        }
     }
     //return path;
 }
@@ -251,8 +320,25 @@ bool DataStructure::InList(osmium::object_id_type *element, vector<osmium::objec
     return true; //(find(list->begin(), list->end(), *element) != list->end());
 }
 
+double DataStructure::CostCalc(osmium::object_id_type edge, long startDelay)
+{
+    long carsOnEdge = GetNumCarsInSeconds(edge, startDelay);
+    auto density = carsOnEdge / EVList[edge].length;
+
+    if(EdgeInEVList(edge))
+    {
+        //return ; //TODO apply func
+
+        auto res = SpeedyCongestedCondition + ((SpeedLimit - SpeedyCongestedCondition) /  pow( (1 + exp(  (density - turningPoint) / scaleOne  )), scaleTwo ));
+
+        return res;
 
 
+    }
+
+
+    return -1;
+}
 
 
 

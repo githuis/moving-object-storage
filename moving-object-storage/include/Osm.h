@@ -101,7 +101,9 @@ protected:
             if (init) {
                 allWays.push_back(way.id());
                 double dist = osmium::geom::haversine::distance(way.nodes());
-                idealCostAndLength.push_back(std::make_tuple(dist,dist));//TODO apply cost func to first element here
+                //dist/80/3.6 is how many seconds it  takes to traverse road at 80kmh
+                idealCostAndLength.push_back(std::make_tuple((dist / (80 / 3.6)), dist));
+
 
                 NeighbourList *list = new NeighbourList();
 

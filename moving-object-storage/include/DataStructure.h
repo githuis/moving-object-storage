@@ -6,6 +6,8 @@
 #define GetEdge(X) std::get<0>(X)
 #define GetTime(X) std::get<1>(X)
 //#define Vehicle std::tuple<long, Trajectory_t>
+#define KmhToMps / 3.6
+#define DenseKmToM / 1000
 
 
 #include <string>
@@ -43,26 +45,19 @@ public:
     long GetNumCarsInSeconds(osmium::object_id_type edgeId, long time);
     //</editor-fold>
 
-    vector<osmium::object_id_type> CalculatePath(osmium::object_id_type startNode, osmium::object_id_type endNode, NodeMapGraph graph);
+    vector<osmium::object_id_type>
+    CalculatePath(osmium::object_id_type startNode, osmium::object_id_type endNode, NodeMapGraph graph);
 
-    //double CostCalc(double length) //TODO implement
+    vector<osmium::object_id_type>
+    CalculatePathBellmanFord(osmium::object_id_type startNode, osmium::object_id_type endNode, NodeMapGraph graph);
+
+    double CostCalc(osmium::object_id_type edge, long startDelay);
 
     virtual ~DataStructure();
 
-    static void Test();
-
-    //Trajectory
     Trajectory_t testTra();
 
     vector<osmium::object_id_type> FindAllEdges(Trajectory_t traj);
-
-    //Vehicle
-    tuple<long, Trajectory_t> testVec();
-
-    Vehicle MakeVechicle();
-
-    //Accessors
-
 
 protected:
 
@@ -76,17 +71,12 @@ private:
     bool InList(osmium::object_id_type *element, vector<osmium::object_id_type> *list);
 
 
-    //Vehicle
-    //void Insert(Vehicle vehicle, Trajectory_t trajectory);
+    static constexpr double SpeedLimit = 80 KmhToMps; //Speed limit is 80 kmh in M/s
+    static constexpr double SpeedyCongestedCondition = 15 KmhToMps; //At 15 kmh we assume traffic is stop and go. Also measured in M/s
+    static constexpr double turningPoint = 20 DenseKmToM; //How many cars per m (km / 1000) to be congested
+    static constexpr double scaleOne = 0.1612 * (20 DenseKmToM) + 0.0337; //A scaling parameter, usually found from historical data, stolen
+    static constexpr double scaleTwo = 0.0093 * (20 DenseKmToM) + 0.0507; //A scaling parameter, usually found from historical data, stolen
 
-//    void Delete(Vehicle vehicle);
-
-//    void TrajectoryUpdate(Vehicle vehicle);
-
-    //void GetGridCell(std::tuple<uint64_t, std::tuple<uint64_t, uint64_t>> currentVehicle);
-    //void GetNestedGridCell();
-
-//    void GetCars(); //på en traj?
 };
 
 #endif // DATASTRUCTURE_H
