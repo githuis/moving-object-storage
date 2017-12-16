@@ -59,6 +59,8 @@ public:
     vector<osmium::object_id_type>
     ReconstructPath(map<osmium::object_id_type , osmium::object_id_type> cameFrom, osmium::object_id_type current);
 
+    vector<osmium::object_id_type> ConstructRandomPath(int maxLength);
+
 
     double CostCalc(osmium::object_id_type edge, long startDelay);
 

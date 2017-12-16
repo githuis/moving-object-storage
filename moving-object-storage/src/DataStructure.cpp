@@ -434,6 +434,21 @@ bool DataStructure::NodeInNodeLocMap(osmium::object_id_type node)
     return (it != NodeLocations.end());
 }
 
+vector<osmium::object_id_type> DataStructure::ConstructRandomPath(int maxLength, NodeMapGraph graph)
+{
+    auto path = vector<osmium::object_id_type>();
+    auto item = graph.begin();
+
+    int rand = (rand() % (graph.size()-1 +1 ) + min) - 1;
+
+    advance(item, rand);
+
+    //path.push_back(item._M_node);
+
+
+    return path;
+}
+
 
 
 
