@@ -434,16 +434,51 @@ bool DataStructure::NodeInNodeLocMap(osmium::object_id_type node)
     return (it != NodeLocations.end());
 }
 
-vector<osmium::object_id_type> DataStructure::ConstructRandomPath(int maxLength, NodeMapGraph graph)
+Trajectory_t DataStructure::ConstructRandomPath(int maxLength, NodeMapGraph graph)
 {
-    auto path = vector<osmium::object_id_type>();
+    auto path = Trajectory_t();
     auto item = graph.begin();
 
-    int rand = (rand() % (graph.size()-1 +1 ) + min) - 1;
+    srand(time(NULL));
+    auto random = (rand() % (graph.size()-1));
 
-    advance(item, rand);
+    advance(item, random);
 
-    //path.push_back(item._M_node);
+    //path.push_back(item->first);
+
+    int i = 0, time = 0;
+
+    osmium::object_id_type node = item->first;
+
+    while(i < maxLength)
+    {
+        ++i;
+        auto nmelement = graph[node];
+        auto nn = nmelement.head;
+
+        if(nmelement.length < 2)
+        {
+            //cout << "Error building random traj, node only has 1 neighbour" << endl;
+            if(path.size() > 0)
+                return path;
+            break;
+        }
+
+
+        for (int j = 0; j < nmelement.length; j++) {
+            if(   (rand() % 11) % 3 == 0 ){
+                nn = nn->next;
+                break;
+            }
+
+        }
+
+        node = nn->nodeId;
+        time += (int)EVList[nn->edge].idealCost;
+        path.push_back(make_tuple(nn->edge, time));
+    }
+
+
 
 
     return path;

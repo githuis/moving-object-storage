@@ -92,9 +92,10 @@ protected:
         void way(const osmium::Way &way)
         {
             const char *highway = way.tags()["highway"];
+            const char *area =    way.tags()["area"];
 
             //We don't want to include non roads
-            if(!highway || !ViableNode(std::string(highway)))
+            if(!highway || !ViableNode(std::string(highway)) || area)
             {
                 return;
             }
@@ -193,9 +194,10 @@ protected:
         void way(const osmium::Way &way)
         {
             const char *highway = way.tags()["highway"];
+            const char *area =    way.tags()["area"];
 
             //We don't want to include non roads
-            if(!highway || !ViableNode(std::string(highway)))
+            if(!highway || !ViableNode(std::string(highway)) || area)
             {
                 return;
             }
@@ -221,8 +223,6 @@ protected:
 
 
 private:
-
-    static const std::string cycleHighWayTag, stepsHighWayTag, footHighWayTag, pedestrianHighWayTag;
     static const std::string ignoreTags[];
 
     void AddPoi(int argc, char *const *argv) const;

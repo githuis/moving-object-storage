@@ -182,6 +182,11 @@ std::map<osmium::object_id_type, NeighbourList> Osm::NodeWayBuilder(std::string 
 
     handler.DeleteSingles();
     handler.DeleteSingles();
+    handler.DeleteSingles();
+    handler.DeleteSingles();
+    handler.DeleteSingles();
+    handler.DeleteSingles();
+    handler.DeleteSingles();
 
     std::cout << "Built node array" << std::endl;
 
