@@ -80,11 +80,9 @@ int main(int argc, char* argv[])
                         testVehicles[k].UpdateTrajectory(testVehicles[k + 3].trajectory);
                     else
                         testVehicles[k].UpdateTrajectory(testVehicles[k - 1].trajectory);
-
                 }
 
                 cout << buildTime << cars << "," << trajectorySize << "," << (double) (clock() - tStart) / CLOCKS_PER_SEC << endl;
-                //printf("Update   Time taken: %.6fs\n",(double)(clock() - tStart)/CLOCKS_PER_SEC);
             }
         }
 
