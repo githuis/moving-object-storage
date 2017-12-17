@@ -47,41 +47,48 @@ int main(int argc, char* argv[])
 
     clock_t tStart;
     vector<Vehicle> testVehicles;
-    int testMax = 1000000;
-    cout << "Cars, Trajectory, update traj (seconds)"  << endl;
+    int testMax = 10000;
+    int trajMax = 10000;
+    double buildTime = 0;
 
-    for (int cars = 10; cars <= testMax; cars*=10)
-    {
-        for (int trajectorySize = 10; trajectorySize < testMax; trajectorySize *= 10)
-        {
-            testVehicles = vector<Vehicle>();
+    for (int j = 0; j < 3; ++j) {
 
-            for (int i = 0; i < cars; ++i) {
-                //testVehicles.push_back(Vehicle(i, ds->ConstructRandomPath(trajectorySize, graph)));
-                testVehicles.emplace_back(i, ds->ConstructRandomPath(trajectorySize, graph));
+        cout << "Test #" << j+1 << endl;
+        cout << "Buildtime, Cars, Trajectory, update traj (seconds)" << endl;
+
+        for (int cars = 10; cars <= testMax; cars *= 10) {
+            for (int trajectorySize = 10; trajectorySize <= trajMax; trajectorySize *= 10) {
+                testVehicles = vector<Vehicle>();
+                tStart = clock();
+
+                for (int i = 0; i < cars; ++i) {
+                    //testVehicles.push_back(Vehicle(i, ds->ConstructRandomPath(trajectorySize, graph)));
+                    testVehicles.emplace_back(i, ds->ConstructRandomPath(trajectorySize, graph));
+                }
+
+                buildTime = (double) (clock() - tStart) / CLOCKS_PER_SEC;
+                tStart = clock();
+
+                //Update test
+                //for (int k = 0; k < cars; ++k)
+                //{
+                //    testVehicles[k].UpdateTime(5);
+                //}
+
+                for (int k = 0; k < cars; ++k) {
+                    if (k == 0)
+                        testVehicles[k].UpdateTrajectory(testVehicles[k + 3].trajectory);
+                    else
+                        testVehicles[k].UpdateTrajectory(testVehicles[k - 1].trajectory);
+
+                }
+
+                cout << buildTime << cars << "," << trajectorySize << "," << (double) (clock() - tStart) / CLOCKS_PER_SEC << endl;
+                //printf("Update   Time taken: %.6fs\n",(double)(clock() - tStart)/CLOCKS_PER_SEC);
             }
-
-
-            tStart = clock();
-
-            //Update test
-            //for (int k = 0; k < cars; ++k)
-            //{
-            //    testVehicles[k].UpdateTime(5);
-            //}
-
-            for (int k = 0; k < cars; ++k)
-            {
-                if(k == 0)
-                    testVehicles[k].UpdateTrajectory(testVehicles[k+3].trajectory);
-                else
-                    testVehicles[k].UpdateTrajectory(testVehicles[k-1].trajectory);
-
-            }
-
-            cout << cars << "," << trajectorySize << "," << (double)(clock() - tStart)/CLOCKS_PER_SEC << endl;
-            //printf("Update   Time taken: %.6fs\n",(double)(clock() - tStart)/CLOCKS_PER_SEC);
         }
+
+        cout << endl << endl;
     }
 
 
