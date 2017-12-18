@@ -9,9 +9,26 @@
 #include <fstream>
 #include <ios>
 
+#include<mach/mach.h>
+
+
+
 #define QUICK_RUN true
 
 using namespace std;
+
+
+struct task_basic_info t_info;
+mach_msg_type_number_t t_info_count = TASK_BASIC_INFO_COUNT;
+
+if (KERN_SUCCESS != task_info(mach_task_self(),
+        TASK_BASIC_INFO, (task_info_t)&t_info,
+&t_info_count))
+{
+return -1;
+}
+
+
 
 //https://stackoverflow.com/questions/669438/how-to-get-memory-usage-at-run-time-in-c
 void process_mem_usage(double& vm_usage, double& resident_set)
@@ -144,7 +161,8 @@ int main(int argc, char* argv[])
                 double vm, rss;
                 process_mem_usage(vm, rss);
 
-                cout << "," << cars << "," << trajectorySize << "," << fixed << (double) (clock() - tStart) / CLOCKS_PER_SEC  << "," << (vm /1024)<< "," << (rss/1024) << endl;
+                //cout << "," << cars << "," << trajectorySize << "," << fixed << (double) (clock() - tStart) / CLOCKS_PER_SEC << "," << (vm /1024)<< "," << (rss/1024) << endl;
+                cout << "," << cars << "," << trajectorySize << "," << fixed << (double) (clock() - tStart) / CLOCKS_PER_SEC << "," << t_info.virtual_size << endl;
             }
         }
 
