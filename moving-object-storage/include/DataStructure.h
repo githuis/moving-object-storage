@@ -64,6 +64,7 @@ public:
 
 
     double CostCalc(osmium::object_id_type edge, long startDelay);
+    double RandomCostCalc();
 
     virtual ~DataStructure();
 

@@ -416,6 +416,25 @@ double DataStructure::CostCalc(osmium::object_id_type edge, long startDelay)
     return -1;
 }
 
+double DataStructure::RandomCostCalc()
+{
+    osmium::object_id_type  edge;
+    long delay;
+    auto item = EVList.begin();
+
+    srand(time(NULL));
+    auto random = (rand() % (EVList.size()-1));
+    delay =  (rand() % 1000);
+
+
+    advance(item, random);
+
+    edge = EVList[item->first].edge;
+
+    return CostCalc(edge, delay);
+
+}
+
 double DataStructure::HeuristicCost(osmium::object_id_type nodeStart, osmium::object_id_type nodeEnd)
 {
     if(this->NodeInNodeLocMap(nodeStart) && this->NodeInNodeLocMap(nodeEnd))
@@ -478,11 +497,9 @@ Trajectory_t DataStructure::ConstructRandomPath(int maxLength, NodeMapGraph grap
         path.push_back(make_tuple(nn->edge, time));
     }
 
-
-
-
     return path;
 }
+
 
 
 

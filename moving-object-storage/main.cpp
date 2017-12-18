@@ -5,9 +5,53 @@
 #include <tuple>
 #include <iomanip>
 
+#include <unistd.h>
+#include <fstream>
+#include <ios>
+
 #define QUICK_RUN true
 
 using namespace std;
+
+//https://stackoverflow.com/questions/669438/how-to-get-memory-usage-at-run-time-in-c
+void process_mem_usage(double& vm_usage, double& resident_set)
+{
+    using std::ios_base;
+    using std::ifstream;
+    using std::string;
+
+    vm_usage     = 0.0;
+    resident_set = 0.0;
+
+    // 'file' stat seems to give the most reliable results
+    //
+    ifstream stat_stream("/proc/self/stat",ios_base::in);
+
+    // dummy vars for leading entries in stat that we don't care about
+    //
+    string pid, comm, state, ppid, pgrp, session, tty_nr;
+    string tpgid, flags, minflt, cminflt, majflt, cmajflt;
+    string utime, stime, cutime, cstime, priority, nice;
+    string O, itrealvalue, starttime;
+
+    // the two fields we want
+    //
+    unsigned long vsize;
+    long rss;
+
+    stat_stream >> pid >> comm >> state >> ppid >> pgrp >> session >> tty_nr
+                >> tpgid >> flags >> minflt >> cminflt >> majflt >> cmajflt
+                >> utime >> stime >> cutime >> cstime >> priority >> nice
+                >> O >> itrealvalue >> starttime >> vsize >> rss; // don't care about the rest
+
+    stat_stream.close();
+
+    long page_size_kb = sysconf(_SC_PAGE_SIZE) / 1024; // in case x86-64 is configured to use 2MB pages
+    vm_usage     = vsize / 1024.0;
+    resident_set = rss * page_size_kb;
+}
+
+
 
 int main(int argc, char* argv[])
 {
@@ -47,26 +91,30 @@ int main(int argc, char* argv[])
 
     clock_t tStart;
     vector<Vehicle> testVehicles;
-    int testMax = 10000;
-    int trajMax = 10000;
+    int testMax = 1000000;
+    int trajMax = 1000;
     double buildTime = 0;
+
 
     for (int j = 0; j < 3; ++j) {
 
         cout << "Test #" << j+1 << endl;
-        cout << "Buildtime, Cars, Trajectory, update traj (seconds)" << endl;
+        cout << "Buildtime, Cars, Trajectory, update s, vram mb, total mem mb" << endl;
 
         for (int cars = 10; cars <= testMax; cars *= 10) {
             for (int trajectorySize = 10; trajectorySize <= trajMax; trajectorySize *= 10) {
                 testVehicles = vector<Vehicle>();
                 tStart = clock();
+                auto tra = ds->ConstructRandomPath(trajectorySize, graph);
 
-                for (int i = 0; i < cars; ++i) {
-                    //testVehicles.push_back(Vehicle(i, ds->ConstructRandomPath(trajectorySize, graph)));
-                    testVehicles.emplace_back(i, ds->ConstructRandomPath(trajectorySize, graph));
+                for (int i = 0; i <= cars; ++i) {
+                    testVehicles.push_back(Vehicle(i, ds->ConstructRandomPath(trajectorySize, graph)));
+                    //testVehicles.emplace_back(i, tra);
                 }
 
                 buildTime = (double) (clock() - tStart) / CLOCKS_PER_SEC;
+                cout <<  buildTime;
+
                 tStart = clock();
 
                 //Update test
@@ -75,14 +123,28 @@ int main(int argc, char* argv[])
                 //    testVehicles[k].UpdateTime(5);
                 //}
 
-                for (int k = 0; k < cars; ++k) {
-                    if (k == 0)
-                        testVehicles[k].UpdateTrajectory(testVehicles[k + 3].trajectory);
-                    else
-                        testVehicles[k].UpdateTrajectory(testVehicles[k - 1].trajectory);
+                //for (int k = 0; k < cars; ++k) {
+                //    if (k == 0)
+                //        testVehicles[k].UpdateTrajectory(testVehicles[k + 3].trajectory);
+                //    else
+                //        testVehicles[k].UpdateTrajectory(testVehicles[k - 1].trajectory);
+                //}
+
+                for (int i = 0; i < cars; ++i) {
+                    auto veh = testVehicles[i];
+                    double totalCost;
+
+                    for (auto pair : veh.trajectory)
+                    {
+                        totalCost += ds->CostCalc(get<0>(pair), get<1>(pair));
+                    }
                 }
 
-                cout << buildTime << cars << "," << trajectorySize << "," << (double) (clock() - tStart) / CLOCKS_PER_SEC << endl;
+
+                double vm, rss;
+                process_mem_usage(vm, rss);
+
+                cout << "," << cars << "," << trajectorySize << "," << fixed << (double) (clock() - tStart) / CLOCKS_PER_SEC  << "," << (vm /1024)<< "," << (rss/1024) << endl;
             }
         }
 
