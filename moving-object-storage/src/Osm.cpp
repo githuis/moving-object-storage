@@ -55,7 +55,7 @@ void Osm::AddPoi(int argc, char *const *argv) const
         exit(1);
     }
 
-    std::__cxx11::string output_file_name{argv[1]};
+    std::string output_file_name{argv[1]};
 
     osmium::io::File output_file{output_file_name, output_file_name == "-" ? ".opl" : ""};
     try {
