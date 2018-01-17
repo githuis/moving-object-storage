@@ -89,6 +89,7 @@ protected:
         std::map<osmium::object_id_type, NeighbourList>::iterator it;
         bool init;
 
+        //Called on every road (way)
         void way(const osmium::Way &way)
         {
             const char *highway = way.tags()["highway"];
@@ -110,6 +111,7 @@ protected:
 
                 NeighbourList *list = new NeighbourList();
 
+                //removes useless intermediate nodes
                 for (auto i = way.nodes().begin(); i != way.nodes().end(); ++i) {
 
                     it = moreThanOneConnectionMap.find(i->ref());
@@ -128,7 +130,7 @@ protected:
                 //i : osmium::OSMObject::const_iterator
                 // http://www.cplusplus.com/reference/map/map/find/
 
-                std::list<osmium::object_id_type> lst;
+                std::list<osmium::object_id_type> lst; //list of osm nodes
                 for (auto i = way.nodes().begin(); i != way.nodes().end(); ++i) {
                     it = moreThanOneConnectionMap.find(i->ref());
 
@@ -156,11 +158,12 @@ protected:
                                 continue;
                             }
 
-                            auto l = map[i->ref()].head;
+
+                            auto linkedList = map[i->ref()].head;
                             bool addFlag = true; //Assume we should not add node *j
                             for (int k = 0; k < map[i->ref()].length; ++k) {
-                                if (l->nodeId != *j) {
-                                    l = l->next;
+                                if (linkedList->nodeId != *j) {
+                                    linkedList = linkedList->next;
                                     continue;
                                 } else {
                                     addFlag = true;

@@ -37,7 +37,7 @@ return;
 #else
 
 
-//https://stackoverflow.com/questions/669438/how-to-get-memory-usage-at-run-time-in-c
+//Code is taken from https://stackoverflow.com/questions/669438/how-to-get-memory-usage-at-run-time-in-c
 void process_mem_usage(double &vm_usage, double &resident_set)
 {
     using std::ios_base;
@@ -80,41 +80,26 @@ void process_mem_usage(double &vm_usage, double &resident_set)
 
 int main(int argc, char *argv[])
 {
-    cout << "Hello" << endl;
+    cout << "Beginning to build road network graph" << endl;
     DataStructure *ds = new DataStructure();
 
-
-    Trajectory_t testTrajectory = ds->testTra();
-    auto res = GetEdge(testTrajectory[0]);
-
-    //Test Osmium
+    //Initialize the data loader
     Osm *osm = new Osm();
-    //osm->LocationTest();
-    //osm->AddPoiTest(argc, argv);
 
-
+    //Use either a small or large data set to construct road network graph
 #if QUICK_RUN
-    NodeMapGraph graph = osm->GraphBuilder(osm->NodeWayBuilder("boi.osm"), "boi.osm");
+    NodeMapGraph graph = osm->GraphBuilder(osm->NodeWayBuilder("map.osm"), "map.osm");
 #else
     NodeMapGraph graph = osm->GraphBuilder(osm->NodeWayBuilder("denmark-latest.osm.pbf"), "denmark-latest.osm.pbf");
 #endif
 
+    //Build the Edges hashmap
     ds->NodeLocations = osm->NodeLocations;
-
-
     ds->EVList = ds->EVListBuilder(osm->AllWays, osm->IdealCost);
 
-    EdgeVehicleList *EVPointer = &ds->EVList;
-
-    //Vehicle testVehicle = Vehicle(1, testTrajectory);
-
-    //Randers node = 703743906
-    //auto path = ds->CalculatePath(28783202, 28785114, graph);
-    // auto path = ds->CalculatePathAStar(28783202, 1043821932, graph);
-
-
-    cout << "Pathing" << endl;
-    auto path = ds->CalculatePathNew(28783202, 278060241, graph);
+    //Run a pathing example
+    cout << "Pathing: " << endl;
+    auto path = ds->CalculatePathNew(28783202, 28785114, graph); //Creates a list of nodes, not a real trajectory.
 
 
     clock_t tStart;
@@ -136,8 +121,8 @@ int main(int argc, char *argv[])
                 tStart = clock();
 
                 for (int i = 0; i <= cars; ++i) {
-                    testVehicles.push_back(Vehicle(i, ds->ConstructRandomPathQuick(trajectorySize, graph)));
-                    //testVehicles.emplace_back(i, tra);
+                    auto p = ds->ConstructRandomPathQuick(trajectorySize, graph);
+                    testVehicles.push_back(Vehicle(i, p));
                 }
 
                 buildTime = (double) (clock() - tStart) / CLOCKS_PER_SEC;
@@ -145,12 +130,13 @@ int main(int argc, char *argv[])
 
                 tStart = clock();
 
-                //Update test
+                //Uncomment this loop for testing the update time operation
                 //for (int k = 0; k < cars; ++k)
                 //{
                 //    testVehicles[k].UpdateTime(5);
                 //}
 
+                //Uncomment this loop for testing the update trajectory operation
                 //for (int k = 0; k < cars; ++k) {
                 //    if (k == 0)
                 //        testVehicles[k].UpdateTrajectory(testVehicles[k + 3].trajectory);
@@ -158,6 +144,7 @@ int main(int argc, char *argv[])
                 //        testVehicles[k].UpdateTrajectory(testVehicles[k - 1].trajectory);
                 //}
 
+                //Uncomment this loop for testing the weight calculation operation
                 for (int i = 0; i < cars; ++i) {
 
                     auto veh = testVehicles[i];

@@ -499,13 +499,41 @@ Trajectory_t DataStructure::ConstructRandomPathQuick(int maxLength, NodeMapGraph
     advance(item, random);
 
 
-    for (int k = 0; k <maxLength; ++k) {
-        item = graph.begin();
-        random = (rand() % (graph.size()-1));
-        advance(item, random);
+    auto v = item->second.head;
 
-        path.emplace_back(make_tuple(item->first, 2*k));
+    for (int j = 0; j < maxLength; ++j) {
+
+        double cost = CostCalc(v->edge, 1);
+        auto target = v->edge;
+        auto targetV = v;
+
+        while(v != nullptr )
+        {
+            auto val = CostCalc(v->edge, 1);
+
+            if(val <= cost)
+            {
+                target = v->edge;
+                cost = val;
+                targetV = v;
+            }
+
+            v = v->next;
+        }
+
+
+
+        path.emplace_back(make_tuple(target,cost));
+        if(graph.find(targetV->nodeId) != graph.end())
+        {
+            v = graph.find(targetV->nodeId)->second.head;
+        } else
+        {
+            break;
+        }
+
     }
+
 
     return path;
 }
@@ -526,10 +554,10 @@ Trajectory_t DataStructure::ConstructRandomPathQuick(int maxLength, NodeMapGraph
 vector<osmium::object_id_type>
 DataStructure::CalculatePathNew(osmium::object_id_type startNode, osmium::object_id_type endNode, NodeMapGraph graph)
 {
-    auto Q = vector<osmium::object_id_type>();
+    auto Q = vector<osmium::object_id_type>(); //lost of nodes
 
-    map<osmium::object_id_type, long> dist;
-    map<osmium::object_id_type , osmium::object_id_type> prev;
+    map<osmium::object_id_type, long> dist; //dist to node
+    map<osmium::object_id_type , osmium::object_id_type> prev; //node to node
 
 
     for (auto i = graph.begin(); i != graph.end() ; ++i)
@@ -537,15 +565,15 @@ DataStructure::CalculatePathNew(osmium::object_id_type startNode, osmium::object
         dist[i->first] = std::numeric_limits<long>::max();
         prev[i->first] = -1;
         Q.push_back(i->first);
+
     }
 
     dist[startNode] = 0;
 
-    auto x = dist[startNode];
-
     while(!Q.empty())
     {
         osmium::object_id_type u = this->FindMinDistNew(&dist, &Q);
+
 
         if(u == endNode)
         {
@@ -563,13 +591,13 @@ DataStructure::CalculatePathNew(osmium::object_id_type startNode, osmium::object
         }
 
         Q.erase(remove(Q.begin(), Q.end(), u), Q.end());
+        auto bStart = clock();
 
 
         auto v = graph[u].head;
         //auto inQ = InListNew(v->nodeId, Q);
         while(v != NULL)
         {
-            //auto v = graph[u].head;
             auto distu = dist[u];
             auto ideal = EVList[v->edge].idealCost;
 
@@ -583,10 +611,7 @@ DataStructure::CalculatePathNew(osmium::object_id_type startNode, osmium::object
             if(v->next == NULL)
                 break;
             v = v->next;
-
         }
-
-
     }
     //return path;
 }
@@ -611,8 +636,6 @@ osmium::object_id_type DataStructure::FindMinDistNew(map<osmium::object_id_type,
             }
         }
     }
-    cout << "Target: " << target << endl;
-
     return target;
 }
 
