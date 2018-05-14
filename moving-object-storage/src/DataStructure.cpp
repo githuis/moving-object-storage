@@ -142,103 +142,6 @@ long DataStructure::GetNumCarsInSeconds(osmium::object_id_type edgeId, long time
 }
 
 /*
-vector<osmium::object_id_type>
-DataStructure::CalculatePath(osmium::object_id_type startNode, osmium::object_id_type endNode, NodeMapGraph graph)
-{
-    auto Q = vector<osmium::object_id_type>();
-    bool endNodeInData = false;
-
-    map<osmium::object_id_type, double> dist;
-    map<osmium::object_id_type , osmium::object_id_type> prev;
-
-
-    for (auto i = graph.begin(); i != graph.end() ; ++i)
-    {
-
-        dist[i->first] = std::numeric_limits<double>::max();
-        prev[i->first] = -1;
-        Q.push_back(i->first);
-
-        if(i->first == endNode)
-        {
-            endNodeInData = true;
-        }
-    }
-
-    if(!endNodeInData)
-        return vector<osmium::object_id_type>();
-
-    dist[startNode] = 0;
-
-    while(!Q.empty())
-    {
-        osmium::object_id_type u = this->FindMinDist(&dist, &Q);
-
-        if(u == endNode)
-        {
-            vector<osmium::object_id_type> S;
-
-            while(prev[u] != -1)
-            {
-                S.insert(S.begin(),u);
-                u = prev[u];
-            }
-
-            S.insert(S.begin(), u);
-
-            return S;
-        }
-
-        std::cout << Q.size() << endl;
-
-        for (int i = 0; i <Q.size(); ++i) {
-            if(Q[i] == u)
-            {
-                Q.erase(Q.begin() + i);
-                i--;
-            }
-        }
-        Q.erase(    remove(Q.begin(), Q.end(), u),    Q.end());
-        std::cout << Q.size() << endl;
-
-
-        bool inQ;// = InList(v->nodeId, Q);
-
-        if(u == -1)
-            continue;
-
-
-        auto v = graph[u].head;
-        if(v != NULL)
-             inQ = InList(v->nodeId, Q);
-        else
-            continue;
-
-        while(v->next != NULL && inQ)
-        {
-            //auto v = graph[u].head;
-            auto alt = dist[u] + EVList[v->edge].idealCost;
-
-            if(alt < dist[v->nodeId])
-            {
-                dist[v->nodeId] = static_cast<long>(alt);
-                prev[v->nodeId] = u;
-            }
-            if(v->next == nullptr || v->next == NULL)
-                break;
-            v = v->next;
-
-        }
-    }
-
-
-    auto emptyPath = vector<osmium::object_id_type>();
-    emptyPath.push_back(startNode);
-    return emptyPath;
-    //return path;
-}
-
-
 
 vector<osmium::object_id_type>
 DataStructure::CalculatePathAStar(osmium::object_id_type startNode, osmium::object_id_type endNode, NodeMapGraph graph)
@@ -322,7 +225,7 @@ DataStructure::CalculatePathAStar(osmium::object_id_type startNode, osmium::obje
     }
 
     throw std::invalid_argument("No valid path!");
-}*/
+}*///A* implementation
 
 vector<osmium::object_id_type>
 DataStructure::ReconstructPath(map<osmium::object_id_type , osmium::object_id_type> cameFrom, osmium::object_id_type current)
@@ -365,7 +268,7 @@ osmium::object_id_type DataStructure::FindMinDist(map<osmium::object_id_type, do
     }
 
     return target;
-}*/
+}*///Find minDist Old imp
 
 bool DataStructure::InList(osmium::object_id_type element, vector<osmium::object_id_type> list)
 {

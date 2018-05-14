@@ -131,18 +131,18 @@ int main(int argc, char *argv[])
                 tStart = clock();
 
                 //Uncomment this loop for testing the update time operation
-                //for (int k = 0; k < cars; ++k)
-                //{
-                //    testVehicles[k].UpdateTime(5);
-                //}
+                for (int k = 0; k < cars; ++k)
+                {
+                    testVehicles[k].UpdateTime(5);
+                }
 
                 //Uncomment this loop for testing the update trajectory operation
-                //for (int k = 0; k < cars; ++k) {
-                //    if (k == 0)
-                //        testVehicles[k].UpdateTrajectory(testVehicles[k + 3].trajectory);
-                //    else
-                //        testVehicles[k].UpdateTrajectory(testVehicles[k - 1].trajectory);
-                //}
+                for (int k = 0; k < cars; ++k) {
+                    if (k == 0)
+                        testVehicles[k].UpdateTrajectory(testVehicles[k + 3].trajectory);
+                    else
+                        testVehicles[k].UpdateTrajectory(testVehicles[k - 1].trajectory);
+                }
 
                 //Uncomment this loop for testing the weight calculation operation
                 for (int i = 0; i < cars; ++i) {
