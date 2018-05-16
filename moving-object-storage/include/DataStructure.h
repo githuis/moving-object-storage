@@ -2,13 +2,13 @@
 #define DATASTRUCTURE_H
 
 #define Trajectory_t std::vector<std::tuple<osmium::object_id_type, long>>
-#define EdgeVehicleList map<osmium::object_id_type, EdgeVehicleReference>
+#define EdgeVehicleList unordered_map<osmium::object_id_type, EdgeVehicleReference>
 #define GetEdge(X) std::get<0>(X)
 #define GetTime(X) std::get<1>(X)
 //#define Vehicle std::tuple<long, Trajectory_t>
 #define KmhToMps / 3.6
 #define DenseKmToM / 1000
-#define NodeLocationMapPointer std::map<osmium::object_id_type, osmium::Location>
+#define NodeLocationMapPointer std::unordered_map<osmium::object_id_type, osmium::Location>
 
 
 #include <string>
@@ -22,6 +22,7 @@
 #include "Osm.h"
 #include "Vehicle.h"
 #include "EdgeVehicleReference.h"
+#include <unordered_map>
 
 
 using namespace std;
@@ -65,16 +66,16 @@ public:
     bool NodeInNodeLocMap(osmium::object_id_type node);
 
     vector<osmium::object_id_type>
-    ReconstructPath(map<osmium::object_id_type, osmium::object_id_type> cameFrom, osmium::object_id_type current);
+    ReconstructPath(unordered_map<osmium::object_id_type, osmium::object_id_type> cameFrom, osmium::object_id_type current);
 
 
     Trajectory_t ConstructRandomPath(int maxLength, NodeMapGraph graph);
 
     vector<tuple<osmium::object_id_type, long>>
-    ConstructRandomPathQuick(int maxLength, map<osmium::object_id_type, NeighbourList> graph);
+    ConstructRandomPathQuick(int maxLength, unordered_map<osmium::object_id_type, NeighbourList> graph);
 
     vector<osmium::object_id_type> CalculatePathNew(osmium::object_id_type startNode, osmium::object_id_type endNode,
-                                                    map<osmium::object_id_type, NeighbourList> graph);
+                                                    unordered_map<osmium::object_id_type, NeighbourList> graph);
 
 
     double CostCalc(osmium::object_id_type edge, long startDelay);
@@ -95,7 +96,7 @@ private:
 
     //map<osmium::object_id_type, long> ConstructGScore(osmium::object_id_type startNode, NodeMapGraph graph);
 
-    osmium::object_id_type FindMinDist(map<osmium::object_id_type, double> *dist, vector<osmium::object_id_type> *Q);
+    osmium::object_id_type FindMinDist(unordered_map<osmium::object_id_type, double> *dist, vector<osmium::object_id_type> *Q);
 
     bool InList(osmium::object_id_type element, vector<osmium::object_id_type> list);
 
@@ -110,7 +111,7 @@ private:
             0.0093 * (20 DenseKmToM) + 0.0507; //A scaling parameter, usually found from historical data, stolen
 
 
-    osmium::object_id_type FindMinDistNew(map<osmium::object_id_type, long> *dist, vector<osmium::object_id_type> *Q);
+    osmium::object_id_type FindMinDistNew(unordered_map<osmium::object_id_type, long> *dist, vector<osmium::object_id_type> *Q);
 
 
     bool InListNew(osmium::object_id_type element, vector<osmium::object_id_type> list);

@@ -32,7 +32,7 @@ EdgeVehicleList DataStructure::EVListBuilder(vector<osmium::object_id_type> allW
                                              vector<tuple<double, double>> costAndLength)
 {
     //auto x = vector<tuple<osmium::object_id_type, vector<tuple<long, vector<tuple<osmium::object_id_type, long>*>> *>>>();
-    auto x = map<osmium::object_id_type, EdgeVehicleReference>();
+    auto x = unordered_map<osmium::object_id_type, EdgeVehicleReference>();
 
     for (int i = 0; i < allWays.size(); ++i) {
         vector<Vehicle *> y = vector<Vehicle *>();
@@ -54,7 +54,7 @@ void DataStructure::Insert(Vehicle v)
         cout << "Vehicle has no (an empty) trajectory!!!!" << endl;
         return;
     }
-    auto it = map<osmium::object_id_type, EdgeVehicleReference>::iterator();
+    auto it = unordered_map<osmium::object_id_type, EdgeVehicleReference>::iterator();
 
     auto list = this->FindAllEdges(v.trajectory);
 
@@ -228,7 +228,7 @@ DataStructure::CalculatePathAStar(osmium::object_id_type startNode, osmium::obje
 }*///A* implementation
 
 vector<osmium::object_id_type>
-DataStructure::ReconstructPath(map<osmium::object_id_type , osmium::object_id_type> cameFrom, osmium::object_id_type current)
+DataStructure::ReconstructPath(unordered_map<osmium::object_id_type , osmium::object_id_type> cameFrom, osmium::object_id_type current)
 {
     vector<osmium::object_id_type> totalPath = vector<osmium::object_id_type>();
     totalPath.push_back(current);
@@ -459,8 +459,8 @@ DataStructure::CalculatePathNew(osmium::object_id_type startNode, osmium::object
 {
     auto Q = vector<osmium::object_id_type>(); //lost of nodes
 
-    map<osmium::object_id_type, long> dist; //dist to node
-    map<osmium::object_id_type , osmium::object_id_type> prev; //node to node
+    unordered_map<osmium::object_id_type, long> dist; //dist to node
+    unordered_map<osmium::object_id_type , osmium::object_id_type> prev; //node to node
 
 
     for (auto i = graph.begin(); i != graph.end() ; ++i)
@@ -519,7 +519,7 @@ DataStructure::CalculatePathNew(osmium::object_id_type startNode, osmium::object
     //return path;
 }
 
-osmium::object_id_type DataStructure::FindMinDistNew(map<osmium::object_id_type, long> *dist, vector<osmium::object_id_type> *Q)
+osmium::object_id_type DataStructure::FindMinDistNew(unordered_map<osmium::object_id_type, long> *dist, vector<osmium::object_id_type> *Q)
 {
 
     long distance = std::numeric_limits<long>::max();
