@@ -54,7 +54,7 @@ void DataStructure::Insert(Vehicle v)
         cout << "Vehicle has no (an empty) trajectory!!!!" << endl;
         return;
     }
-    auto it;
+    auto it = unordered_map<osmium::object_id_type, EdgeVehicleReference>::iterator();
 
     auto list = this->FindAllEdges(v.trajectory);
 
