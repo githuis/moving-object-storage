@@ -8,6 +8,9 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 find_package(Osmium REQUIRED COMPONENTS <XXX>)
 include_directories(SYSTEM ${OSMIUM_INCLUDE_DIRS})
 
+find_package(Protozero REQUIRED)
+include_directories(SYSTEM ${PROTOZERO_INCLUDE_DIR})
+
 #set(GEM_DEBUG TRUE)
 #find_package(Gem COMPONENTS rice hoe)
 #include_directories(${GEM_INCLUDE_DIRS})
