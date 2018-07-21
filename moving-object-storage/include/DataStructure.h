@@ -63,13 +63,6 @@ public:
 
     //double HeuristicCost(osmium::object_id_type nodeStart, osmium::object_id_type nodeEnd);
 
-    bool NodeInNodeLocMap(osmium::object_id_type node);
-
-    vector<osmium::object_id_type>
-    ReconstructPath(unordered_map<osmium::object_id_type, osmium::object_id_type> cameFrom, osmium::object_id_type current);
-
-
-    Trajectory_t ConstructRandomPath(int maxLength, NodeMapGraph graph);
 
     vector<tuple<osmium::object_id_type, long>>
     ConstructRandomPathQuick(int maxLength, unordered_map<osmium::object_id_type, NeighbourList> graph);
@@ -80,7 +73,6 @@ public:
 
     double CostCalc(osmium::object_id_type edge, long startDelay);
 
-    double RandomCostCalc();
 
     virtual ~DataStructure();
 
@@ -95,11 +87,6 @@ private:
     bool EdgeInEVList(osmium::object_id_type edgeId);
 
     //map<osmium::object_id_type, long> ConstructGScore(osmium::object_id_type startNode, NodeMapGraph graph);
-
-    osmium::object_id_type FindMinDist(unordered_map<osmium::object_id_type, double> *dist, vector<osmium::object_id_type> *Q);
-
-    bool InList(osmium::object_id_type element, vector<osmium::object_id_type> list);
-
 
     static constexpr double SpeedLimit = 80 KmhToMps; //Speed limit is 80 kmh in M/s
     static constexpr double SpeedyCongestedCondition =
