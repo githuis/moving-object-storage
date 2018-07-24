@@ -102,6 +102,10 @@ private:
 
 
     bool InListNew(osmium::object_id_type element, vector<osmium::object_id_type> list);
+
+    vector<osmium::object_id_type>
+    Dijkstra(unordered_map<osmium::object_id_type, NeighbourList> graph, osmium::object_id_type startNode,
+             osmium::object_id_type endNode);
 };
 
 #endif // DATASTRUCTURE_H

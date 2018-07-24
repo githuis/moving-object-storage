@@ -6,6 +6,7 @@
 #include <math.h>
 #include <osmium/geom/haversine.hpp>
 #include <stdexcept>
+#include <queue>
 
 DataStructure::DataStructure()
 {
@@ -31,7 +32,6 @@ Trajectory_t DataStructure::testTra()
 EdgeVehicleList DataStructure::EVListBuilder(vector<osmium::object_id_type> allWays,
                                              vector<tuple<double, double>> costAndLength)
 {
-    //auto x = vector<tuple<osmium::object_id_type, vector<tuple<long, vector<tuple<osmium::object_id_type, long>*>> *>>>();
     auto x = unordered_map<osmium::object_id_type, EdgeVehicleReference>();
 
     for (int i = 0; i < allWays.size(); ++i) {
@@ -78,9 +78,6 @@ vector<osmium::object_id_type> DataStructure::FindAllEdges(Trajectory_t traj)
     }
 
     return list;
-
-
-    //return vector<vector<tuple<osmium::object_id_type, long>>>();
 }
 
 void DataStructure::UpdateVehicleTrajectory(Vehicle v, Trajectory_t newTrajectory)
@@ -224,12 +221,41 @@ Trajectory_t DataStructure::ConstructRandomPathQuick(int maxLength, NodeMapGraph
  *
  * =================================
  */
+typedef pair<osmium::object_id_type, osmium::object_id_type> iPair;
+vector<int> dist;
+vector<osmium::object_id_type>
+DataStructure::Dijkstra(NodeMapGraph graph, osmium::object_id_type startNode, osmium::object_id_type endNode)
+{
+    priority_queue<iPair, vector<iPair>, greater<iPair> > Q;
+    unordered_map<osmium::object_id_type, long> distance;
+    unordered_map<osmium::object_id_type , osmium::object_id_type> previous;
 
+    for (auto i = graph.begin(); i != graph.end() ; ++i)
+    {
+        distance[i->first] = std::numeric_limits<long>::max();
+        previous[i->first] = -1;
+        Q.push(i->first);
+    }
+    distance[startNode] = 0;
+
+    while(!Q.empty()){
+        long u = Q.top().second;
+        Q.pop();
+        for (auto &c : graph[u]) {
+            int v = c.first;
+            int w = c.second;
+            if(distance[v] > distance[u] + w){
+                distance[v] = distance[u] + w;
+                Q.push({distance[v],v});
+            }
+        }
+    }
+}
 
 vector<osmium::object_id_type>
 DataStructure::CalculatePathNew(osmium::object_id_type startNode, osmium::object_id_type endNode, NodeMapGraph graph)
 {
-    auto Q = vector<osmium::object_id_type>(); //lost of nodes
+    auto Q = vector<osmium::object_id_type>(); //list of nodes
 
     unordered_map<osmium::object_id_type, long> dist; //dist to node
     unordered_map<osmium::object_id_type , osmium::object_id_type> prev; //node to node
