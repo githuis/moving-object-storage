@@ -70,6 +70,10 @@ public:
     vector<osmium::object_id_type> CalculatePathNew(osmium::object_id_type startNode, osmium::object_id_type endNode,
                                                     unordered_map<osmium::object_id_type, NeighbourList> graph);
 
+    vector<osmium::object_id_type>
+    Dijkstra(osmium::object_id_type startNode, osmium::object_id_type endNode,
+             unordered_map<osmium::object_id_type, NeighbourList> graph);
+
 
     double CostCalc(osmium::object_id_type edge, long startDelay);
 
@@ -102,10 +106,6 @@ private:
 
 
     bool InListNew(osmium::object_id_type element, vector<osmium::object_id_type> list);
-
-    vector<osmium::object_id_type>
-    Dijkstra(unordered_map<osmium::object_id_type, NeighbourList> graph, osmium::object_id_type startNode,
-             osmium::object_id_type endNode);
 };
 
 #endif // DATASTRUCTURE_H

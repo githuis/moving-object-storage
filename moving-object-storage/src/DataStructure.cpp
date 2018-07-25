@@ -223,8 +223,9 @@ Trajectory_t DataStructure::ConstructRandomPathQuick(int maxLength, NodeMapGraph
  */
 typedef pair<osmium::object_id_type, osmium::object_id_type> iPair;
 vector<int> dist;
+
 vector<osmium::object_id_type>
-DataStructure::Dijkstra(NodeMapGraph graph, osmium::object_id_type startNode, osmium::object_id_type endNode)
+DataStructure::Dijkstra(osmium::object_id_type startNode, osmium::object_id_type endNode, NodeMapGraph graph)
 {
     priority_queue<iPair, vector<iPair>, greater<iPair> > Q;
     unordered_map<osmium::object_id_type, long> distance;
@@ -234,22 +235,39 @@ DataStructure::Dijkstra(NodeMapGraph graph, osmium::object_id_type startNode, os
     {
         distance[i->first] = std::numeric_limits<long>::max();
         previous[i->first] = -1;
-        Q.push(i->first);
+        Q.push({0,i->first});
     }
-    distance[startNode] = 0;
 
-    while(!Q.empty()){
+
+
+    distance[startNode] = 0;
+    while(!Q.empty())
+    {
         long u = Q.top().second;
         Q.pop();
-        for (auto &c : graph[u]) {
-            int v = c.first;
-            int w = c.second;
-            if(distance[v] > distance[u] + w){
+        int count = 0;
+        auto c = graph[u].head;
+        while( count < graph[u].length)
+        {
+            osmium::object_id_type v = u;
+            osmium::object_id_type w = c->nodeId;
+            if(distance[v] > distance[u] + w)
+            {
                 distance[v] = distance[u] + w;
                 Q.push({distance[v],v});
             }
+            count++;
+            if(count == graph[u].length)
+                continue;
+            c = c->next;
         }
+        //cout << distance.size() << endl;
+        //cout << Q.size() << " " << Q.empty() << endl;
+
     }
+    cout << "Distance:" << distance.size() << endl;
+    cout << "Graph: " << graph.size() << endl;
+    return vector<osmium::object_id_type>{};
 }
 
 vector<osmium::object_id_type>

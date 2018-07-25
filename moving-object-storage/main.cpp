@@ -99,13 +99,13 @@ int main(int argc, char *argv[])
 
     //Run a pathing example
     cout << "Pathing: " << endl;
-    auto path = ds->CalculatePathNew(28783202, 28785114, graph); //Creates a list of nodes, not a real trajectory.
-
+    auto path = ds->Dijkstra(28783202, 28785114, graph); //Creates a list of nodes, not a real trajectory.
+    cout << "Done" << endl;
 
     clock_t tStart;
     vector<Vehicle> testVehicles;
-    int testMax = 1000000;
-    int trajMax = 1000;
+    int testMax = 10;
+    int trajMax = 10;
     double buildTime = 0;
     double vm, rss;
 
