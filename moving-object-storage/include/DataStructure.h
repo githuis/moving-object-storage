@@ -106,6 +106,9 @@ private:
 
 
     bool InListNew(osmium::object_id_type element, vector<osmium::object_id_type> list);
+
+    vector<osmium::object_id_type>
+    ReturnPath(unordered_map<osmium::object_id_type, osmium::object_id_type> prev, osmium::object_id_type target);
 };
 
 #endif // DATASTRUCTURE_H

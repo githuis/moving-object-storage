@@ -222,14 +222,13 @@ Trajectory_t DataStructure::ConstructRandomPathQuick(int maxLength, NodeMapGraph
  * =================================
  */
 typedef pair<osmium::object_id_type, osmium::object_id_type> iPair;
-vector<int> dist;
 
 vector<osmium::object_id_type>
 DataStructure::Dijkstra(osmium::object_id_type startNode, osmium::object_id_type endNode, NodeMapGraph graph)
 {
     priority_queue<iPair, vector<iPair>, greater<iPair> > Q;
     unordered_map<osmium::object_id_type, long> distance;
-    unordered_map<osmium::object_id_type , osmium::object_id_type> previous;
+    unordered_map<osmium::object_id_type, osmium::object_id_type> previous;
 
     for (auto i = graph.begin(); i != graph.end() ; ++i)
     {
@@ -237,8 +236,6 @@ DataStructure::Dijkstra(osmium::object_id_type startNode, osmium::object_id_type
         previous[i->first] = -1;
         Q.push({0,i->first});
     }
-
-
 
     distance[startNode] = 0;
     while(!Q.empty())
@@ -254,6 +251,7 @@ DataStructure::Dijkstra(osmium::object_id_type startNode, osmium::object_id_type
             if(distance[v] > distance[u] + w)
             {
                 distance[v] = distance[u] + w;
+                previous[v] = u;
                 Q.push({distance[v],v});
             }
             count++;
@@ -261,14 +259,33 @@ DataStructure::Dijkstra(osmium::object_id_type startNode, osmium::object_id_type
                 continue;
             c = c->next;
         }
+        if(u == endNode)
+        {
+            return ReturnPath(previous, endNode);
+        }
         //cout << distance.size() << endl;
         //cout << Q.size() << " " << Q.empty() << endl;
 
     }
     cout << "Distance:" << distance.size() << endl;
     cout << "Graph: " << graph.size() << endl;
-    return vector<osmium::object_id_type>{};
 }
+
+vector<osmium::object_id_type>
+DataStructure::ReturnPath(unordered_map<osmium::object_id_type, osmium::object_id_type> prev, osmium::object_id_type target)
+{
+    vector<osmium::object_id_type> S;
+    cout << prev.size() << endl;
+    while(prev[target] != NULL)
+    {
+        S.insert(S.begin(),target);
+        target = prev[target];
+    }
+
+    S.insert(S.begin(),target);
+    return S;
+}
+
 
 vector<osmium::object_id_type>
 DataStructure::CalculatePathNew(osmium::object_id_type startNode, osmium::object_id_type endNode, NodeMapGraph graph)
