@@ -244,10 +244,14 @@ DataStructure::Dijkstra(osmium::object_id_type startNode, osmium::object_id_type
         Q.pop();
         int count = 0;
         auto c = graph[u].head;
+        auto d = c->next;
         while( count < graph[u].length)
         {
-            osmium::object_id_type v = u;
-            osmium::object_id_type w = c->nodeId;
+            osmium::object_id_type v = c->nodeId;
+            if(d != NULL)
+                osmium::object_id_type w = d->nodeId;
+            else
+                skip;
             if(distance[v] > distance[u] + w)
             {
                 distance[v] = distance[u] + w;
