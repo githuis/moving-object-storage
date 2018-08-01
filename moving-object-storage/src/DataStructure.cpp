@@ -234,24 +234,26 @@ DataStructure::Dijkstra(osmium::object_id_type startNode, osmium::object_id_type
     {
         distance[i->first] = std::numeric_limits<long>::max();
         previous[i->first] = -1;
-        Q.push({0,i->first});
+        Q.push({0,startNode});
     }
 
     distance[startNode] = 0;
+
     while(!Q.empty())
     {
         long u = Q.top().second;
         Q.pop();
         int count = 0;
         auto c = graph[u].head;
-        auto d = c->next;
         while( count < graph[u].length)
         {
+
             osmium::object_id_type v = c->nodeId;
-            if(d != NULL)
-                osmium::object_id_type w = d->nodeId;
-            else
-                skip;
+            auto w = CostCalc(c->edge,distance[u]);
+
+
+
+
             if(distance[v] > distance[u] + w)
             {
                 distance[v] = distance[u] + w;
@@ -284,8 +286,8 @@ DataStructure::ReturnPath(unordered_map<osmium::object_id_type, osmium::object_i
     {
         S.insert(S.begin(),target);
         target = prev[target];
-    }
 
+    }
     S.insert(S.begin(),target);
     return S;
 }

@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
 
     //Run a pathing example
     cout << "Pathing: " << endl;
-    auto path = ds->Dijkstra(28783202, 28785114, graph); //Creates a list of nodes, not a real trajectory.
+    auto path = ds->Dijkstra(28783203, 28785114, graph); //Creates a list of nodes, not a real trajectory.
     cout << "Done" << endl;
 
     clock_t tStart;
