@@ -70,7 +70,7 @@ public:
     vector<osmium::object_id_type> CalculatePathNew(osmium::object_id_type startNode, osmium::object_id_type endNode,
                                                     unordered_map<osmium::object_id_type, NeighbourList> graph);
 
-    vector<osmium::object_id_type>
+    Trajectory_t
     Dijkstra(osmium::object_id_type startNode, osmium::object_id_type endNode,
              unordered_map<osmium::object_id_type, NeighbourList> graph);
 
@@ -107,8 +107,9 @@ private:
 
     bool InListNew(osmium::object_id_type element, vector<osmium::object_id_type> list);
 
-    vector<osmium::object_id_type>
-    ReturnPath(unordered_map<osmium::object_id_type, osmium::object_id_type> prev, osmium::object_id_type target);
+    Trajectory_t
+    ReturnPath(unordered_map<osmium::object_id_type, osmium::object_id_type> prev, osmium::object_id_type target,unordered_map<osmium::object_id_type,
+            long> distance);
 };
 
 #endif // DATASTRUCTURE_H

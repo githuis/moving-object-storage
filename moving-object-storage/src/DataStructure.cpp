@@ -145,13 +145,9 @@ double DataStructure::CostCalc(osmium::object_id_type edge, long startDelay)
 
     if(EdgeInEVList(edge))
     {
-        //return ; //TODO apply func
-
         auto res = SpeedyCongestedCondition + ((SpeedLimit - SpeedyCongestedCondition) /  pow( (1 + exp(  (density - turningPoint) / scaleOne  )), scaleTwo ));
 
         return res;
-
-
     }
 
 
@@ -223,7 +219,7 @@ Trajectory_t DataStructure::ConstructRandomPathQuick(int maxLength, NodeMapGraph
  */
 typedef pair<osmium::object_id_type, osmium::object_id_type> iPair;
 
-vector<osmium::object_id_type>
+Trajectory_t
 DataStructure::Dijkstra(osmium::object_id_type startNode, osmium::object_id_type endNode, NodeMapGraph graph)
 {
     priority_queue<iPair, vector<iPair>, greater<iPair> > Q;
@@ -247,16 +243,12 @@ DataStructure::Dijkstra(osmium::object_id_type startNode, osmium::object_id_type
         auto c = graph[u].head;
         while( count < graph[u].length)
         {
-
             osmium::object_id_type v = c->nodeId;
             auto w = CostCalc(c->edge,distance[u]);
 
-
-
-
             if(distance[v] > distance[u] + w)
             {
-                distance[v] = distance[u] + w;
+                distance[v] = static_cast<long>(distance[u] + w);
                 previous[v] = u;
                 Q.push({distance[v],v});
             }
@@ -267,28 +259,28 @@ DataStructure::Dijkstra(osmium::object_id_type startNode, osmium::object_id_type
         }
         if(u == endNode)
         {
-            return ReturnPath(previous, endNode);
+            return ReturnPath(previous, endNode ,distance);
         }
         //cout << distance.size() << endl;
         //cout << Q.size() << " " << Q.empty() << endl;
 
     }
-    cout << "Distance:" << distance.size() << endl;
-    cout << "Graph: " << graph.size() << endl;
+
 }
 
-vector<osmium::object_id_type>
-DataStructure::ReturnPath(unordered_map<osmium::object_id_type, osmium::object_id_type> prev, osmium::object_id_type target)
+Trajectory_t
+DataStructure::ReturnPath(unordered_map<osmium::object_id_type, osmium::object_id_type> prev, osmium::object_id_type target
+        ,unordered_map<osmium::object_id_type, long> distance)
 {
-    vector<osmium::object_id_type> S;
-    cout << prev.size() << endl;
+    auto S = Trajectory_t();
+
     while(prev[target] != NULL)
     {
-        S.insert(S.begin(),target);
+        S.emplace_back(make_tuple(target,distance[target]));
         target = prev[target];
 
     }
-    S.insert(S.begin(),target);
+
     return S;
 }
 

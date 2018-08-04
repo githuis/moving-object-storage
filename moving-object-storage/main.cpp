@@ -9,6 +9,8 @@
 #include <fstream>
 #include <ios>
 
+#include <iostream>
+
 
 #define QUICK_RUN true
 #define MAC false
@@ -99,84 +101,83 @@ int main(int argc, char *argv[])
 
     //Run a pathing example
     cout << "Pathing: " << endl;
-    auto path = ds->Dijkstra(28783203, 28785114, graph); //Creates a list of nodes, not a real trajectory.
+    auto path = ds->Dijkstra(28783203, 333245479, graph); //Creates a list of nodes, not a real trajectory.
     cout << "Done" << endl;
 
     clock_t tStart;
     vector<Vehicle> testVehicles;
-    int testMax = 10;
-    int trajMax = 10;
+    int testMax = 10000;
+    int trajMax = 100000;
     double buildTime = 0;
     double vm, rss;
 
+    ofstream outputFile;
+    outputFile.open("programTestData.txt");
 
-    for (int j = 0; j < 3; ++j) {
+    cout << "Cars, Trajectory, update s, vram mb, total mem mb" << endl;
+    outputFile << "Cars, Trajectory, update s, vram mb, total mem mb" << endl;
 
-        cout << "Test #" << j + 1 << endl;
-        cout << "Buildtime, Cars, Trajectory, update s, vram mb, total mem mb" << endl;
+    for (int cars = 10; cars <= testMax; cars *= 10) {
+        for (int trajectorySize = 10; trajectorySize <= trajMax; trajectorySize *= 10) {
+            testVehicles = vector<Vehicle>();
+            tStart = clock();
 
-        for (int cars = 10; cars <= testMax; cars *= 10) {
-            for (int trajectorySize = 10; trajectorySize <= trajMax; trajectorySize *= 10) {
-                testVehicles = vector<Vehicle>();
-                tStart = clock();
+            for (int i = 0; i <= cars; ++i) {
+                auto p = ds->Dijkstra(28783203, 333245479, graph);
+                testVehicles.push_back(Vehicle(i, p));
+            }
 
-                for (int i = 0; i <= cars; ++i) {
-                    auto p = ds->ConstructRandomPathQuick(trajectorySize, graph);
-                    testVehicles.push_back(Vehicle(i, p));
-                }
+            buildTime = (double) (clock() - tStart) / CLOCKS_PER_SEC;
+            cout << buildTime;
 
-                buildTime = (double) (clock() - tStart) / CLOCKS_PER_SEC;
-                cout << buildTime;
+            tStart = clock();
 
-                tStart = clock();
+            //Uncomment this loop for testing the update time operation
+            for (int k = 0; k < cars; ++k) {
+                testVehicles[k].UpdateTime(5);
+            }
 
-                //Uncomment this loop for testing the update time operation
-                for (int k = 0; k < cars; ++k)
-                {
-                    testVehicles[k].UpdateTime(5);
-                }
+            //Uncomment this loop for testing the update trajectory operation
+            //for (int k = 0; k < cars; ++k) {
+            //    if (k == 0)
+            //        testVehicles[k].UpdateTrajectory(testVehicles[k + 3].trajectory);
+            //    else
+            //        testVehicles[k].UpdateTrajectory(testVehicles[k - 1].trajectory);
+            //}
 
-                //Uncomment this loop for testing the update trajectory operation
-                for (int k = 0; k < cars; ++k) {
-                    if (k == 0)
-                        testVehicles[k].UpdateTrajectory(testVehicles[k + 3].trajectory);
-                    else
-                        testVehicles[k].UpdateTrajectory(testVehicles[k - 1].trajectory);
-                }
+            //Uncomment this loop for testing the weight calculation operation
+            //for (int i = 0; i < cars; ++i) {
 
-                //Uncomment this loop for testing the weight calculation operation
-                for (int i = 0; i < cars; ++i) {
+            //    auto veh = testVehicles[i];
+            //    double totalCost;
 
-                    auto veh = testVehicles[i];
-                    double totalCost;
+            //    for (auto pair : veh.trajectory){
+            //        totalCost += ds->CostCalc(get<0>(pair), get<1>(pair));
+            //    }
 
-                    for (auto pair : veh.trajectory) {
-                        totalCost += ds->CostCalc(get<0>(pair), get<1>(pair));
-                    }
-
-
-                }
+            //}
 
 #if MAC
-                cout << "," << cars << "," << trajectorySize << "," << fixed << (double) (clock() - tStart) / CLOCKS_PER_SEC << "," << t_info.virtual_size << endl;
+                cout << cars << "," << trajectorySize << "," << fixed << (double) (clock() - tStart) / CLOCKS_PER_SEC << "," << t_info.virtual_size << endl;
+                outputFile << "," << cars << "," << trajectorySize << "," << fixed << (double) (clock() - tStart) / CLOCKS_PER_SEC << "," << t_info.virtual_size << endl;
 #else
                 process_mem_usage(vm, rss);
 
-                cout << "," << cars << "," << trajectorySize << "," << fixed
+                cout << cars << "," << fixed
                      << (double) (clock() - tStart) / CLOCKS_PER_SEC << "," << (vm / 1024) << "," << (rss / 1024)
                      << endl;
+                outputFile << cars << "," << fixed
+                           << (double) (clock() - tStart) / CLOCKS_PER_SEC << "," << (vm / 1024) << "," << (rss / 1024)
+                           << endl;
 #endif
-
 
             }
         }
 
         cout << endl << endl;
-    }
-
 
     cout << "End of running" <<
-         endl;
+        endl;
 
 
     return 0;
