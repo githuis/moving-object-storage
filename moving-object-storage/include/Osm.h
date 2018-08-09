@@ -14,7 +14,7 @@
 #include <list>
 #include <unordered_map>
 
-#define NodeMapGraph std::map<osmium::object_id_type, NeighbourList>
+#define NodeMapGraph std::unordered_map<osmium::object_id_type, NeighbourList>
 
 class Osm {
 public:
@@ -22,13 +22,13 @@ public:
 
     std::vector<osmium::object_id_type> AllWays;
     std::vector<std::tuple<double, double>> IdealCost;
-    std::map<osmium::object_id_type, osmium::Location> NodeLocations;
+    std::unordered_map<osmium::object_id_type, osmium::Location> NodeLocations;
 
     void AddPoiTest(int argc, char **argv);
 
     void LocationTest();
 
-    NodeMapGraph GraphBuilder(std::map<osmium::object_id_type, NeighbourList> verticies,
+    NodeMapGraph GraphBuilder(std::unordered_map<osmium::object_id_type, NeighbourList> verticies,
                               std::string fileName); //Builds neighbours
 
     NodeMapGraph NodeWayBuilder(std::string fileName); //Builds first array of nodes
@@ -82,12 +82,12 @@ protected:
     //Finds all intersection nodes
     struct GraphBuilderHandler : public osmium::handler::Handler {
 
-        std::map<osmium::object_id_type, NeighbourList> map;
-        std::map<osmium::object_id_type, NeighbourList> moreThanOneConnectionMap;
+        std::unordered_map<osmium::object_id_type, NeighbourList> map;
+        std::unordered_map<osmium::object_id_type, NeighbourList> moreThanOneConnectionMap;
         std::vector<osmium::object_id_type> allWays;
         std::vector<std::tuple<double, double >> idealCostAndLength;
-        std::map<osmium::object_id_type, osmium::Location> nodeLoc;
-        std::map<osmium::object_id_type, NeighbourList>::iterator it;
+        std::unordered_map<osmium::object_id_type, osmium::Location> nodeLoc;
+        std::unordered_map<osmium::object_id_type, NeighbourList>::iterator it;
         bool init;
 
         //Called on every road (way)
@@ -193,7 +193,7 @@ protected:
 
     struct NodeWayAssignmentHandler : public osmium::handler::Handler {
 
-        std::map<osmium::object_id_type, NeighbourList> partOfWayMap;
+        std::unordered_map<osmium::object_id_type, NeighbourList> partOfWayMap;
 
         void way(const osmium::Way &way)
         {

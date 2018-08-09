@@ -32,7 +32,7 @@ Trajectory_t DataStructure::testTra()
 EdgeVehicleList DataStructure::EVListBuilder(vector<osmium::object_id_type> allWays,
                                              vector<tuple<double, double>> costAndLength)
 {
-    auto x = map<osmium::object_id_type, EdgeVehicleReference>();
+    auto x = unordered_map<osmium::object_id_type, EdgeVehicleReference>();
 
     for (int i = 0; i < allWays.size(); ++i) {
         vector<Vehicle *> y = vector<Vehicle *>();
@@ -54,7 +54,7 @@ void DataStructure::Insert(Vehicle v)
         cout << "Vehicle has no (an empty) trajectory!!!!" << endl;
         return;
     }
-    auto it = map<osmium::object_id_type, EdgeVehicleReference>::iterator();
+    auto it = unordered_map<osmium::object_id_type, EdgeVehicleReference>::iterator();
 
     auto list = this->FindAllEdges(v.trajectory);
 
@@ -175,9 +175,9 @@ Trajectory_t
 DataStructure::Dijkstra(osmium::object_id_type startNode, osmium::object_id_type endNode, NodeMapGraph graph)
 {
     priority_queue<iPair, vector<iPair>, greater<iPair> > Q;
-    map<osmium::object_id_type, long> distance;
-    map<osmium::object_id_type, osmium::object_id_type> previous;
-    map<osmium::object_id_type, long> edges;
+    unordered_map<osmium::object_id_type, long> distance;
+    unordered_map<osmium::object_id_type, osmium::object_id_type> previous;
+    unordered_map<osmium::object_id_type, long> edges;
 
     for (auto i = graph.begin(); i != graph.end() ; ++i)
     {
@@ -227,8 +227,8 @@ DataStructure::Dijkstra(osmium::object_id_type startNode, osmium::object_id_type
 }
 
 Trajectory_t
-DataStructure::ReturnPath(map<osmium::object_id_type, osmium::object_id_type> prev, osmium::object_id_type target
-        ,map<osmium::object_id_type, long> distance, map<osmium::object_id_type, long> edges)
+DataStructure::ReturnPath(unordered_map<osmium::object_id_type, osmium::object_id_type> prev, osmium::object_id_type target
+        ,unordered_map<osmium::object_id_type, long> distance, unordered_map<osmium::object_id_type, long> edges)
 {
     auto S = Trajectory_t();
 

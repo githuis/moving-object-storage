@@ -2,13 +2,13 @@
 #define DATASTRUCTURE_H
 
 #define Trajectory_t std::vector<std::tuple<osmium::object_id_type, long>>
-#define EdgeVehicleList map<osmium::object_id_type, EdgeVehicleReference>
+#define EdgeVehicleList unordered_map<osmium::object_id_type, EdgeVehicleReference>
 #define GetEdge(X) std::get<0>(X)
 #define GetTime(X) std::get<1>(X)
 //#define Vehicle std::tuple<long, Trajectory_t>
 #define KmhToMps / 3.6
 #define DenseKmToM / 1000
-#define NodeLocationMapPointer std::map<osmium::object_id_type, osmium::Location>
+#define NodeLocationMapPointer std::unordered_map<osmium::object_id_type, osmium::Location>
 
 
 #include <string>
@@ -65,7 +65,7 @@ public:
 
     Trajectory_t
     Dijkstra(osmium::object_id_type startNode, osmium::object_id_type endNode,
-             map<osmium::object_id_type, NeighbourList> graph);
+             unordered_map<osmium::object_id_type, NeighbourList> graph);
 
 
     double CostCalc(osmium::object_id_type edge, long startDelay);
@@ -95,8 +95,8 @@ private:
             0.0093 * (20 DenseKmToM) + 0.0507; //A scaling parameter, usually found from historical data, stolen
 
     Trajectory_t
-    ReturnPath(map<osmium::object_id_type, osmium::object_id_type> prev, osmium::object_id_type target,map<osmium::object_id_type,
-            long> distance, map<osmium::object_id_type, long> edges);
+    ReturnPath(unordered_map<osmium::object_id_type, osmium::object_id_type> prev, osmium::object_id_type target,unordered_map<osmium::object_id_type,
+            long> distance, unordered_map<osmium::object_id_type, long> edges);
 };
 
 #endif // DATASTRUCTURE_H
