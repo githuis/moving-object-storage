@@ -124,9 +124,9 @@ int main(int argc, char *argv[]) {
 
            tStart = clock();
            //Uncomment this loop for testing the update time operation
-           //for (int k = 0; k < cars; ++k) {
-           //    testVehicles[k].UpdateTime(5);
-            //}
+           for (int k = 0; k < cars; ++k) {
+               testVehicles[k].UpdateTime(5);
+            }
 
            //Uncomment for dijkstras test
            //auto test = ds->Dijkstra(28783203, 333245479, graph);
@@ -144,12 +144,12 @@ int main(int argc, char *argv[]) {
 
 
             //Uncomment this loop for testing the weight calculation operation
-           auto veh = testVehicles[1];
-           double totalCost;
+           //auto veh = testVehicles[1];
+           //double totalCost;
 
-           for (auto pair : veh.trajectory){
-           totalCost += ds->CostCalc(get<0>(pair), get<1>(pair));
-           }
+           //for (auto pair : veh.trajectory){
+           //totalCost += ds->CostCalc(get<0>(pair), get<1>(pair));
+           //}
            updateTime = (double)(clock()-tStart)/CLOCKS_PER_SEC;
 
 #if MAC
