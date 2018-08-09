@@ -176,6 +176,7 @@ DataStructure::Dijkstra(osmium::object_id_type startNode, osmium::object_id_type
         distance[i->first] = std::numeric_limits<long>::max();
         previous[i->first] = -1;
         Q.push({0,startNode});
+
     }
 
     distance[startNode] = 0;
@@ -201,11 +202,12 @@ DataStructure::Dijkstra(osmium::object_id_type startNode, osmium::object_id_type
             if(count == graph[u].length)
                 continue;
             c = c->next;
+            if(u == endNode)
+            {
+                return ReturnPath(previous, endNode, distance);
+            }
         }
-        if(u == endNode)
-        {
-            return ReturnPath(previous, endNode ,distance);
-        }
+        return ReturnPath(previous, endNode ,distance);
         //cout << distance.size() << endl;
         //cout << Q.size() << " " << Q.empty() << endl;
 

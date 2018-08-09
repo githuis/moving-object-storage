@@ -19,9 +19,9 @@ include_directories(SYSTEM ${PROTOZERO_INCLUDE_DIR})
 
 set(SOURCE_FILES
         moving-object-storage/src/DataStructure.cpp
-        moving-object-storage/main.cpp moving-object-storage/src/operations.cpp moving-object-storage/src/Osm.cpp moving-object-storage/include/Osm.h moving-object-storage/src/NeighbourList.cpp moving-object-storage/include/NeighbourList.h moving-object-storage/include/Vehicle.h moving-object-storage/include/EdgeVehicleReference.h)
+        moving-object-storage/main.cpp moving-object-storage/src/Osm.cpp moving-object-storage/include/Osm.h moving-object-storage/src/NeighbourList.cpp moving-object-storage/include/NeighbourList.h moving-object-storage/include/Vehicle.h moving-object-storage/include/EdgeVehicleReference.h)
 
-add_executable(moving_object_storage ${SOURCE_FILES} moving-object-storage/src/operations.cpp)
+add_executable(moving_object_storage ${SOURCE_FILES})
 
 
 target_link_libraries(moving_object_storage z bz2 expat pthread)

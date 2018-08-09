@@ -13,7 +13,7 @@
 
 
 #define QUICK_RUN true
-#define MAC false
+#define MAC true
 
 #if MAC
 #include<mach/mach.h>
@@ -23,18 +23,6 @@
 using namespace std;
 
 #if MAC
-void memvoid()
-{
-
-struct task_basic_info t_info;
-mach_msg_type_number_t t_info_count = TASK_BASIC_INFO_COUNT;
-
-if (KERN_SUCCESS != task_info(mach_task_self(),
-        TASK_BASIC_INFO, (task_info_t)&t_info,
-&t_info_count))
-{
-return;
-}
 
 #else
 
@@ -80,11 +68,9 @@ void process_mem_usage(double &vm_usage, double &resident_set)
 #endif
 
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     cout << "Beginning to build road network graph" << endl;
     DataStructure *ds = new DataStructure();
-
     //Initialize the data loader
     Osm *osm = new Osm();
 
@@ -106,19 +92,20 @@ int main(int argc, char *argv[])
 
     clock_t tStart;
     vector<Vehicle> testVehicles;
-    int testMax = 10000;
-    int trajMax = 100000;
+    int testMax = 1000000;
+    int trajMax = 1000000;
     double buildTime = 0;
+    double updateTime = 0;
     double vm, rss;
 
     ofstream outputFile;
     outputFile.open("programTestData.txt");
 
-    cout << "Cars, Trajectory, update s, vram mb, total mem mb" << endl;
-    outputFile << "Cars, Trajectory, update s, vram mb, total mem mb" << endl;
+    cout << "Buildtime, Cars, update s, vram mb, total mem mb" << endl;
+    outputFile << "Buildtime, Cars, update s, vram mb, total mem mb" << endl;
 
     for (int cars = 10; cars <= testMax; cars *= 10) {
-        for (int trajectorySize = 10; trajectorySize <= trajMax; trajectorySize *= 10) {
+
             testVehicles = vector<Vehicle>();
             tStart = clock();
 
@@ -128,7 +115,8 @@ int main(int argc, char *argv[])
             }
 
             buildTime = (double) (clock() - tStart) / CLOCKS_PER_SEC;
-            cout << buildTime;
+            cout << buildTime << endl;
+            outputFile << buildTime;
 
             tStart = clock();
 
@@ -137,41 +125,61 @@ int main(int argc, char *argv[])
                 testVehicles[k].UpdateTime(5);
             }
 
+            //Uncomment for dijkstras test
+            //auto test = ds->Dijkstra(28783203,333245479,graph);
+
             //Uncomment this loop for testing the update trajectory operation
             //for (int k = 0; k < cars; ++k) {
             //    if (k == 0)
             //        testVehicles[k].UpdateTrajectory(testVehicles[k + 3].trajectory);
             //    else
-            //        testVehicles[k].UpdateTrajectory(testVehicles[k - 1].trajectory);
+            //       testVehicles[k].UpdateTrajectory(testVehicles[k - 1].trajectory);
             //}
 
             //Uncomment this loop for testing the weight calculation operation
             //for (int i = 0; i < cars; ++i) {
-
+            //
             //    auto veh = testVehicles[i];
             //    double totalCost;
-
+            //
             //    for (auto pair : veh.trajectory){
             //        totalCost += ds->CostCalc(get<0>(pair), get<1>(pair));
             //    }
-
             //}
+        updateTime =(double) (clock() - buildTime)/ CLOCKS_PER_SEC;
 
 #if MAC
-                cout << cars << "," << trajectorySize << "," << fixed << (double) (clock() - tStart) / CLOCKS_PER_SEC << "," << t_info.virtual_size << endl;
-                outputFile << "," << cars << "," << trajectorySize << "," << fixed << (double) (clock() - tStart) / CLOCKS_PER_SEC << "," << t_info.virtual_size << endl;
+                //from   https://stackoverflow.com/questions/63166/how-to-determine-cpu-and-memory-consumption-from-inside-a-process
+                struct task_basic_info t_info;
+
+                mach_msg_type_number_t t_info_count = TASK_BASIC_INFO_COUNT;
+
+
+
+                if (KERN_SUCCESS != task_info(mach_task_self(),
+
+                                              TASK_BASIC_INFO, (task_info_t)&t_info,
+
+                                              &t_info_count))
+
+                {
+                    return -1;
+                }
+
+     
+                cout << cars << "," << updateTime << "," << t_info.virtual_size << "," << t_info.resident_size << endl;
+                outputFile << "," << cars << "," << updateTime << "," << t_info.virtual_size << "," << t_info.resident_size << endl;
 #else
                 process_mem_usage(vm, rss);
 
-                cout << cars << "," << fixed
-                     << (double) (clock() - tStart) / CLOCKS_PER_SEC << "," << (vm / 1024) << "," << (rss / 1024)
+                cout << "," << cars << "," << fixed
+                     << updateTime << "," << (vm / 1024) << "," << (rss / 1024)
                      << endl;
-                outputFile << cars << "," << fixed
-                           << (double) (clock() - tStart) / CLOCKS_PER_SEC << "," << (vm / 1024) << "," << (rss / 1024)
+                outputFile << "," << cars << "," << updateTime << "," << (vm / 1024) << "," << (rss / 1024)
                            << endl;
 #endif
 
-            }
+
         }
 
         cout << endl << endl;

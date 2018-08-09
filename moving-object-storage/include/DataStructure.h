@@ -63,13 +63,6 @@ public:
 
     //double HeuristicCost(osmium::object_id_type nodeStart, osmium::object_id_type nodeEnd);
 
-
-    vector<tuple<osmium::object_id_type, long>>
-    ConstructRandomPathQuick(int maxLength, unordered_map<osmium::object_id_type, NeighbourList> graph);
-
-    vector<osmium::object_id_type> CalculatePathNew(osmium::object_id_type startNode, osmium::object_id_type endNode,
-                                                    unordered_map<osmium::object_id_type, NeighbourList> graph);
-
     Trajectory_t
     Dijkstra(osmium::object_id_type startNode, osmium::object_id_type endNode,
              unordered_map<osmium::object_id_type, NeighbourList> graph);
@@ -90,7 +83,7 @@ private:
 
     bool EdgeInEVList(osmium::object_id_type edgeId);
 
-    //map<osmium::object_id_type, long> ConstructGScore(osmium::object_id_type startNode, NodeMapGraph graph);
+    //unordered_map<osmium::object_id_type, long> ConstructGScore(osmium::object_id_type startNode, NodeMapGraph graph);
 
     static constexpr double SpeedLimit = 80 KmhToMps; //Speed limit is 80 kmh in M/s
     static constexpr double SpeedyCongestedCondition =
@@ -100,12 +93,6 @@ private:
             0.1612 * (20 DenseKmToM) + 0.0337; //A scaling parameter, usually found from historical data, stolen
     static constexpr double scaleTwo =
             0.0093 * (20 DenseKmToM) + 0.0507; //A scaling parameter, usually found from historical data, stolen
-
-
-    osmium::object_id_type FindMinDistNew(unordered_map<osmium::object_id_type, long> *dist, vector<osmium::object_id_type> *Q);
-
-
-    bool InListNew(osmium::object_id_type element, vector<osmium::object_id_type> list);
 
     Trajectory_t
     ReturnPath(unordered_map<osmium::object_id_type, osmium::object_id_type> prev, osmium::object_id_type target,unordered_map<osmium::object_id_type,

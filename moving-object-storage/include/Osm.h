@@ -5,7 +5,7 @@
 #ifndef MOVING_OBJECT_STORAGE_OSM_H
 #define MOVING_OBJECT_STORAGE_OSM_H
 
-
+#include <map>
 #include <osmium/handler.hpp>
 #include <osmium/handler/node_locations_for_ways.hpp>
 #include <osmium/geom/haversine.hpp>
