@@ -132,8 +132,8 @@ osmium::object_id_type Osm::FindClosestWay(std::string file, osmium::Location ta
     std::cout << "Closest way id is: " << handler.closestWayId << std::endl;
 }
 
-std::unordered_map<osmium::object_id_type, NeighbourList> Osm::GraphBuilder(
-        std::unordered_map<osmium::object_id_type, NeighbourList> verticies, std::string fileName)
+std::map<osmium::object_id_type, NeighbourList> Osm::GraphBuilder(
+        std::map<osmium::object_id_type, NeighbourList> verticies, std::string fileName)
 {
     //std::string fileName = "map.osm";
     osmium::io::Reader reader{fileName, osmium::osm_entity_bits::node | osmium::osm_entity_bits::way};
@@ -168,7 +168,7 @@ std::unordered_map<osmium::object_id_type, NeighbourList> Osm::GraphBuilder(
 }
 
 //Returns all nodes which are connected to more than a single way
-std::unordered_map<osmium::object_id_type, NeighbourList> Osm::NodeWayBuilder(std::string fileName)
+std::map<osmium::object_id_type, NeighbourList> Osm::NodeWayBuilder(std::string fileName)
 {
     //std::string fileName = "map.osm";
     osmium::io::Reader reader{fileName, osmium::osm_entity_bits::node | osmium::osm_entity_bits::way};

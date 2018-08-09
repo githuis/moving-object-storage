@@ -2,13 +2,13 @@
 #define DATASTRUCTURE_H
 
 #define Trajectory_t std::vector<std::tuple<osmium::object_id_type, long>>
-#define EdgeVehicleList unordered_map<osmium::object_id_type, EdgeVehicleReference>
+#define EdgeVehicleList map<osmium::object_id_type, EdgeVehicleReference>
 #define GetEdge(X) std::get<0>(X)
 #define GetTime(X) std::get<1>(X)
 //#define Vehicle std::tuple<long, Trajectory_t>
 #define KmhToMps / 3.6
 #define DenseKmToM / 1000
-#define NodeLocationMapPointer std::unordered_map<osmium::object_id_type, osmium::Location>
+#define NodeLocationMapPointer std::map<osmium::object_id_type, osmium::Location>
 
 
 #include <string>
@@ -65,7 +65,7 @@ public:
 
     Trajectory_t
     Dijkstra(osmium::object_id_type startNode, osmium::object_id_type endNode,
-             unordered_map<osmium::object_id_type, NeighbourList> graph);
+             map<osmium::object_id_type, NeighbourList> graph);
 
 
     double CostCalc(osmium::object_id_type edge, long startDelay);
@@ -83,7 +83,7 @@ private:
 
     bool EdgeInEVList(osmium::object_id_type edgeId);
 
-    //unordered_map<osmium::object_id_type, long> ConstructGScore(osmium::object_id_type startNode, NodeMapGraph graph);
+    //map<osmium::object_id_type, long> ConstructGScore(osmium::object_id_type startNode, NodeMapGraph graph);
 
     static constexpr double SpeedLimit = 80 KmhToMps; //Speed limit is 80 kmh in M/s
     static constexpr double SpeedyCongestedCondition =
@@ -95,7 +95,7 @@ private:
             0.0093 * (20 DenseKmToM) + 0.0507; //A scaling parameter, usually found from historical data, stolen
 
     Trajectory_t
-    ReturnPath(unordered_map<osmium::object_id_type, osmium::object_id_type> prev, osmium::object_id_type target,unordered_map<osmium::object_id_type,
+    ReturnPath(map<osmium::object_id_type, osmium::object_id_type> prev, osmium::object_id_type target,map<osmium::object_id_type,
             long> distance);
 };
 
