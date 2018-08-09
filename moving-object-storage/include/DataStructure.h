@@ -96,7 +96,7 @@ private:
 
     Trajectory_t
     ReturnPath(map<osmium::object_id_type, osmium::object_id_type> prev, osmium::object_id_type target,map<osmium::object_id_type,
-            long> distance);
+            long> distance, map<osmium::object_id_type, long> edges);
 };
 
 #endif // DATASTRUCTURE_H

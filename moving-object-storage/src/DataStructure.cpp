@@ -59,7 +59,6 @@ void DataStructure::Insert(Vehicle v)
     auto list = this->FindAllEdges(v.trajectory);
 
     for (int i = 0; i < list.size(); ++i) {
-
         it = EVList.find(list[i]);
         if (it != EVList.end()) {
             EVList[list[i]].vehicles.push_back(&v);
@@ -124,15 +123,19 @@ bool DataStructure::EdgeInEVList(osmium::object_id_type edgeId)
 
 long DataStructure::GetNumCarsInSeconds(osmium::object_id_type edgeId, long time)
 {
+    if (edgeId = 143978698)return 0;
     int cars = 0;
     if (EdgeInEVList(edgeId)) {
         auto ev = EVList[edgeId];
         for (auto v : ev.vehicles) {
             auto timeSpan = ev.idealCost/2;
+            auto something = &v;
             auto arrival = *v->trajectoryMap[edgeId];
 
-            if( (time-timeSpan) <= arrival && (time+timeSpan) >= arrival)
+            if ((time - timeSpan) <= arrival && (time + timeSpan) >= arrival)
                 cars++;
+
+
         }
     }
     return cars;
@@ -140,7 +143,11 @@ long DataStructure::GetNumCarsInSeconds(osmium::object_id_type edgeId, long time
 
 double DataStructure::CostCalc(osmium::object_id_type edge, long startDelay)
 {
+
     long carsOnEdge = GetNumCarsInSeconds(edge, startDelay);
+    if (carsOnEdge > 0){
+        cout << "poggers" << endl;
+    }
     auto density = carsOnEdge / EVList[edge].length;
 
     if(EdgeInEVList(edge))
@@ -170,60 +177,65 @@ DataStructure::Dijkstra(osmium::object_id_type startNode, osmium::object_id_type
     priority_queue<iPair, vector<iPair>, greater<iPair> > Q;
     map<osmium::object_id_type, long> distance;
     map<osmium::object_id_type, osmium::object_id_type> previous;
+    map<osmium::object_id_type, long> edges;
 
     for (auto i = graph.begin(); i != graph.end() ; ++i)
     {
         distance[i->first] = std::numeric_limits<long>::max();
         previous[i->first] = -1;
-        Q.push({0,startNode});
+        edges[i->first] =-1;
+
 
     }
-
+    Q.push({0,startNode});
     distance[startNode] = 0;
 
-    while(!Q.empty())
-    {
+    while(!Q.empty()) {
         long u = Q.top().second;
         Q.pop();
         int count = 0;
         auto c = graph[u].head;
-        while( count < graph[u].length)
-        {
+        auto something = graph[u].length;
+        while (count < graph[u].length) {
             osmium::object_id_type v = c->nodeId;
-            auto w = CostCalc(c->edge,distance[u]);
+            auto w = CostCalc(c->edge, distance[u]);
 
-            if(distance[v] > distance[u] + w)
-            {
+            if (distance[v] > distance[u] + w) {
                 distance[v] = static_cast<long>(distance[u] + w);
                 previous[v] = u;
-                Q.push({distance[v],v});
+                edges[v] = c->edge;
+                Q.push({distance[v], v});
             }
             count++;
-            if(count == graph[u].length)
-                continue;
+            //if(count == graph[u].length)
+            //   continue;
             c = c->next;
-            if(u == endNode)
-            {
-                return ReturnPath(previous, endNode, distance);
-            }
+
         }
-        return ReturnPath(previous, endNode ,distance);
+        if (u == endNode) {
+            return ReturnPath(previous, endNode, distance,edges);
+        }
+    }
+        auto s1 = distance[endNode];
+        auto s3 = previous[endNode];
+        return ReturnPath(previous, endNode ,distance,edges);
         //cout << distance.size() << endl;
         //cout << Q.size() << " " << Q.empty() << endl;
 
-    }
+
 
 }
 
 Trajectory_t
 DataStructure::ReturnPath(map<osmium::object_id_type, osmium::object_id_type> prev, osmium::object_id_type target
-        ,map<osmium::object_id_type, long> distance)
+        ,map<osmium::object_id_type, long> distance, map<osmium::object_id_type, long> edges)
 {
     auto S = Trajectory_t();
 
-    while(prev[target] != NULL)
+    while(prev[target] != NULL && edges[target] != -1)
     {
-        S.emplace_back(make_tuple(target,distance[target]));
+        auto s1 = edges[target];
+        S.emplace_back(make_tuple(s1,distance[target]));
         target = prev[target];
 
     }
