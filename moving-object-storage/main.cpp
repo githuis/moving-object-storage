@@ -87,11 +87,11 @@ int main(int argc, char *argv[]) {
 
     //Run a pathing example
     cout << "Pathing: " << endl;
-    auto path = ds->Dijkstra(28783203, 333245479, graph); //Creates a list of nodes, not a real trajectory.
+    auto path = ds->Dijkstra(28783202, 28785109, graph); //Creates a list of nodes, not a real trajectory.
     cout << "Done" << endl;
     clock_t tStart;
     vector<Vehicle> testVehicles;
-    int testMax = 1000000;
+    int testMax = 100000;
     int trajMax = 1000000;
     double buildTime = 0;
     double updateTime = 0;
@@ -109,9 +109,12 @@ int main(int argc, char *argv[]) {
             testVehicles = vector<Vehicle>();
             tStart = clock();
 
-            for (int i = 0; i <= cars; ++i) {
-                auto p = ds->Dijkstra(28783203, 333245479, graph);
+           for (int i = 0; i <= cars; ++i) {
+                auto p = ds->Dijkstra(28783202, 28785109, graph);
                 testVehicles.push_back(Vehicle(i, p));
+            }
+            for (int i = 0; i <= cars; ++i) {
+                ds->Insert(testVehicles[i]);
             }
 
             buildTime = (double) (clock() - tStart) / CLOCKS_PER_SEC;
@@ -121,14 +124,12 @@ int main(int argc, char *argv[]) {
 
             tStart = clock();
             //Uncomment this loop for testing the update time operation
-            //for (int k = 0; k < cars; ++k) {
-            //    testVehicles[k].UpdateTime(5);
-            //}
+            for (int k = 0; k < cars; ++k) {
+                testVehicles[k].UpdateTime(5);
+            }
 
             //Uncomment for dijkstras test
-             //auto test = ds->Dijkstra(28783203, 333245479, graph);
-
-
+            // auto test = ds->Dijkstra(28783203, 333245479, graph);
 
 
 
@@ -143,15 +144,15 @@ int main(int argc, char *argv[]) {
 
 
             //Uncomment this loop for testing the weight calculation operation
-            for (int i = 0; i < cars; ++i) {
+            //for (int i = 0; i < cars; ++i) {
 
-                auto veh = testVehicles[i];
-                double totalCost;
+            //    auto veh = testVehicles[i];
+            //    double totalCost;
 
-                for (auto pair : veh.trajectory){
-                    totalCost += ds->CostCalc(get<0>(pair), get<1>(pair));
-                }
-            }
+            //    for (auto pair : veh.trajectory){
+            //        totalCost += ds->CostCalc(get<0>(pair), get<1>(pair));
+            //    }
+            //}
                updateTime = (double)(clock()-tStart)/CLOCKS_PER_SEC;
 
 #if MAC
