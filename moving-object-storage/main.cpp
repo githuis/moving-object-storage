@@ -92,7 +92,7 @@ int main(int argc, char *argv[]) {
     clock_t tStart;
     vector<Vehicle> testVehicles;
     int testMax = 100000;
-    int trajMax = 1000000;
+    int trajMax = 100000;
     double buildTime = 0;
     double updateTime = 0;
     double vm, rss;
@@ -112,24 +112,24 @@ int main(int argc, char *argv[]) {
            for (int i = 0; i <= cars; ++i) {
                 auto p = ds->Dijkstra(28783202, 28785109, graph);
                 testVehicles.push_back(Vehicle(i, p));
-            }
-            for (int i = 0; i <= cars; ++i) {
-                ds->Insert(testVehicles[i]);
-            }
+           }
+           for (int i = 0; i <= cars; ++i) {
+               ds->Insert(testVehicles[i]);
+           }
 
-            buildTime = (double) (clock() - tStart) / CLOCKS_PER_SEC;
-            cout << buildTime << endl;
-            outputFile << buildTime;
+           buildTime = (double) (clock() - tStart) / CLOCKS_PER_SEC;
+           cout << buildTime << endl;
+           outputFile << buildTime;
 
 
-            tStart = clock();
-            //Uncomment this loop for testing the update time operation
-            for (int k = 0; k < cars; ++k) {
-                testVehicles[k].UpdateTime(5);
-            }
+           tStart = clock();
+           //Uncomment this loop for testing the update time operation
+           //for (int k = 0; k < cars; ++k) {
+           //    testVehicles[k].UpdateTime(5);
+            //}
 
-            //Uncomment for dijkstras test
-            // auto test = ds->Dijkstra(28783203, 333245479, graph);
+           //Uncomment for dijkstras test
+           //auto test = ds->Dijkstra(28783203, 333245479, graph);
 
 
 
@@ -144,16 +144,13 @@ int main(int argc, char *argv[]) {
 
 
             //Uncomment this loop for testing the weight calculation operation
-            //for (int i = 0; i < cars; ++i) {
+           auto veh = testVehicles[1];
+           double totalCost;
 
-            //    auto veh = testVehicles[i];
-            //    double totalCost;
-
-            //    for (auto pair : veh.trajectory){
-            //        totalCost += ds->CostCalc(get<0>(pair), get<1>(pair));
-            //    }
-            //}
-               updateTime = (double)(clock()-tStart)/CLOCKS_PER_SEC;
+           for (auto pair : veh.trajectory){
+           totalCost += ds->CostCalc(get<0>(pair), get<1>(pair));
+           }
+           updateTime = (double)(clock()-tStart)/CLOCKS_PER_SEC;
 
 #if MAC
                 //from   https://stackoverflow.com/questions/63166/how-to-determine-cpu-and-memory-consumption-from-inside-a-process
