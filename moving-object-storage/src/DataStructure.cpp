@@ -32,7 +32,7 @@ Trajectory_t DataStructure::testTra()
 EdgeVehicleList DataStructure::EVListBuilder(vector<osmium::object_id_type> allWays,
                                              vector<tuple<double, double>> costAndLength)
 {
-    auto x = map<osmium::object_id_type, EdgeVehicleReference>();
+    auto x = unordered_map<osmium::object_id_type, EdgeVehicleReference>();
 
     for (int i = 0; i < allWays.size(); ++i) {
         vector<Vehicle *> y = vector<Vehicle *>();
@@ -54,11 +54,12 @@ void DataStructure::Insert(Vehicle v)
         cout << "Vehicle has no (an empty) trajectory!!!!" << endl;
         return;
     }
-    auto it = map<osmium::object_id_type, EdgeVehicleReference>::iterator();
+    auto it = unordered_map<osmium::object_id_type, EdgeVehicleReference>::iterator();
 
     auto list = this->FindAllEdges(v.trajectory);
 
     for (int i = 0; i < list.size(); ++i) {
+
         it = EVList.find(list[i]);
         if (it != EVList.end()) {
             EVList[list[i]].vehicles.push_back(&v);
@@ -123,19 +124,15 @@ bool DataStructure::EdgeInEVList(osmium::object_id_type edgeId)
 
 long DataStructure::GetNumCarsInSeconds(osmium::object_id_type edgeId, long time)
 {
-    if (edgeId = 143978698)return 0;
     int cars = 0;
     if (EdgeInEVList(edgeId)) {
         auto ev = EVList[edgeId];
         for (auto v : ev.vehicles) {
             auto timeSpan = ev.idealCost/2;
-            auto something = &v;
             auto arrival = *v->trajectoryMap[edgeId];
 
-            if ((time - timeSpan) <= arrival && (time + timeSpan) >= arrival)
+            if( (time-timeSpan) <= arrival && (time+timeSpan) >= arrival)
                 cars++;
-
-
         }
     }
     return cars;
@@ -143,11 +140,7 @@ long DataStructure::GetNumCarsInSeconds(osmium::object_id_type edgeId, long time
 
 double DataStructure::CostCalc(osmium::object_id_type edge, long startDelay)
 {
-
     long carsOnEdge = GetNumCarsInSeconds(edge, startDelay);
-    if (carsOnEdge > 0){
-        cout << "poggers" << endl;
-    }
     auto density = carsOnEdge / EVList[edge].length;
 
     if(EdgeInEVList(edge))
@@ -175,67 +168,62 @@ Trajectory_t
 DataStructure::Dijkstra(osmium::object_id_type startNode, osmium::object_id_type endNode, NodeMapGraph graph)
 {
     priority_queue<iPair, vector<iPair>, greater<iPair> > Q;
-    map<osmium::object_id_type, long> distance;
-    map<osmium::object_id_type, osmium::object_id_type> previous;
-    map<osmium::object_id_type, long> edges;
+    unordered_map<osmium::object_id_type, long> distance;
+    unordered_map<osmium::object_id_type, osmium::object_id_type> previous;
 
     for (auto i = graph.begin(); i != graph.end() ; ++i)
     {
         distance[i->first] = std::numeric_limits<long>::max();
         previous[i->first] = -1;
-        edges[i->first] =-1;
-
+        Q.push({0,startNode});
 
     }
-    Q.push({0,startNode});
+
     distance[startNode] = 0;
 
-    while(!Q.empty()) {
+    while(!Q.empty())
+    {
         long u = Q.top().second;
         Q.pop();
         int count = 0;
         auto c = graph[u].head;
-        auto something = graph[u].length;
-        while (count < graph[u].length) {
+        while( count < graph[u].length)
+        {
             osmium::object_id_type v = c->nodeId;
-            auto w = CostCalc(c->edge, distance[u]);
+            auto w = CostCalc(c->edge,distance[u]);
 
-            if (distance[v] > distance[u] + w) {
+            if(distance[v] > distance[u] + w)
+            {
                 distance[v] = static_cast<long>(distance[u] + w);
                 previous[v] = u;
-                edges[v] = c->edge;
-                Q.push({distance[v], v});
+                Q.push({distance[v],v});
             }
             count++;
-            //if(count == graph[u].length)
-            //   continue;
+            if(count == graph[u].length)
+                continue;
             c = c->next;
-
+            if(u == endNode)
+            {
+                return ReturnPath(previous, endNode, distance);
+            }
         }
-        if (u == endNode) {
-            return ReturnPath(previous, endNode, distance,edges);
-        }
-    }
-        auto s1 = distance[endNode];
-        auto s3 = previous[endNode];
-        return ReturnPath(previous, endNode ,distance,edges);
+        return ReturnPath(previous, endNode ,distance);
         //cout << distance.size() << endl;
         //cout << Q.size() << " " << Q.empty() << endl;
 
-
+    }
 
 }
 
 Trajectory_t
-DataStructure::ReturnPath(map<osmium::object_id_type, osmium::object_id_type> prev, osmium::object_id_type target
-        ,map<osmium::object_id_type, long> distance, map<osmium::object_id_type, long> edges)
+DataStructure::ReturnPath(unordered_map<osmium::object_id_type, osmium::object_id_type> prev, osmium::object_id_type target
+        ,unordered_map<osmium::object_id_type, long> distance)
 {
     auto S = Trajectory_t();
 
-    while(prev[target] != NULL && edges[target] != -1)
+    while(prev[target] != NULL)
     {
-        auto s1 = edges[target];
-        S.emplace_back(make_tuple(s1,distance[target]));
+        S.emplace_back(make_tuple(target,distance[target]));
         target = prev[target];
 
     }
