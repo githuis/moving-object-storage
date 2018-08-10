@@ -146,7 +146,7 @@ int main(int argc, char *argv[]) {
             //        totalCost += ds->CostCalc(get<0>(pair), get<1>(pair));
             //    }
             //}
-        updateTime =(double) (clock() - buildTime)/ CLOCKS_PER_SEC;
+        updateTime =(double) (clock() - tStart)/ CLOCKS_PER_SEC;
 
 #if MAC
                 //from   https://stackoverflow.com/questions/63166/how-to-determine-cpu-and-memory-consumption-from-inside-a-process
