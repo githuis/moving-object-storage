@@ -168,8 +168,13 @@ Trajectory_t
 DataStructure::Dijkstra(osmium::object_id_type startNode, osmium::object_id_type endNode, NodeMapGraph graph)
 {
     priority_queue<iPair, vector<iPair>, greater<iPair> > Q;
+<<<<<<< HEAD
     unordered_map<osmium::object_id_type, long> distance;
     unordered_map<osmium::object_id_type, osmium::object_id_type> previous;
+=======
+    map<osmium::object_id_type, long> distance;
+    map<osmium::object_id_type, osmium::object_id_type> previous;
+>>>>>>> parent of 818250e... Fixed such that cars gets added to edges
 
     for (auto i = graph.begin(); i != graph.end() ; ++i)
     {

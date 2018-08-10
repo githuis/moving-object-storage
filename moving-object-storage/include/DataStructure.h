@@ -95,8 +95,7 @@ private:
             0.0093 * (20 DenseKmToM) + 0.0507; //A scaling parameter, usually found from historical data, stolen
 
     Trajectory_t
-    ReturnPath(unordered_map<osmium::object_id_type, osmium::object_id_type> prev, osmium::object_id_type target,unordered_map<osmium::object_id_type,
-            long> distance);
+    ReturnPath(unordered_map<osmium::object_id_type, osmium::object_id_type> prev, osmium::object_id_type target,unordered_map<osmium::object_id_type, long> distance);
 };
 
 #endif // DATASTRUCTURE_H
