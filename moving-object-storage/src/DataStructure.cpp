@@ -149,8 +149,6 @@ double DataStructure::CostCalc(osmium::object_id_type edge, long startDelay)
 
         return res;
     }
-
-
     return -1;
 }
 
@@ -177,7 +175,6 @@ DataStructure::Dijkstra(osmium::object_id_type startNode, osmium::object_id_type
         distance[i->first] = std::numeric_limits<long>::max();
         previous[i->first] = -1;
         Q.push({0,startNode});
-
     }
 
     distance[startNode] = 0;
@@ -209,9 +206,6 @@ DataStructure::Dijkstra(osmium::object_id_type startNode, osmium::object_id_type
             }
         }
         return ReturnPath(previous, endNode ,distance);
-        //cout << distance.size() << endl;
-        //cout << Q.size() << " " << Q.empty() << endl;
-
     }
 
 }

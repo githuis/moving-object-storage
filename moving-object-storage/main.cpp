@@ -85,15 +85,9 @@ int main(int argc, char *argv[]) {
     ds->NodeLocations = osm->NodeLocations;
     ds->EVList = ds->EVListBuilder(osm->AllWays, osm->IdealCost);
 
-    //Run a pathing example
-    cout << "Pathing: " << endl;
-    auto path = ds->Dijkstra(28783203, 333245479, graph); //Creates a list of nodes, not a real trajectory.
-    cout << "Done" << endl;
-
     clock_t tStart;
     vector<Vehicle> testVehicles;
-    int testMax = 1000000;
-    int trajMax = 1000000;
+    int MaxOperations = 1000000;
     double buildTime = 0;
     double updateTime = 0;
     double vm, rss;
@@ -104,7 +98,7 @@ int main(int argc, char *argv[]) {
     cout << "Buildtime, Cars, update s, vram mb, total mem mb" << endl;
     outputFile << "Buildtime, Cars, update s, vram mb, total mem mb" << endl;
 
-    for (int cars = 10; cars <= testMax; cars *= 10) {
+    for (int cars = 10; cars <= MaxOperations; cars *= 10) {
 
             testVehicles = vector<Vehicle>();
             tStart = clock();
