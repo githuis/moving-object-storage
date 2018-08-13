@@ -40,11 +40,12 @@ public:
     void UpdateTrajectory(std::vector<std::tuple<osmium::object_id_type, long>> newTrajectory)
     {
         trajectoryMap.empty();
+        trajectory = newTrajectory;
         for (auto &i : trajectory ) {
             trajectoryMap[get<0>(i)] = &get<1>(i);
         }
 
-        trajectory = newTrajectory;
+
 
 
     }

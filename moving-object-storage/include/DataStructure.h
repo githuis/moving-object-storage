@@ -96,7 +96,7 @@ private:
 
     Trajectory_t
     ReturnPath(unordered_map<osmium::object_id_type, osmium::object_id_type> prev, osmium::object_id_type target,unordered_map<osmium::object_id_type,
-            long> distance);
+            long> distance,unordered_map<osmium::object_id_type, osmium::object_id_type> edges);
 
 };
 

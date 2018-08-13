@@ -104,8 +104,9 @@ int main(int argc, char *argv[]) {
             tStart = clock();
 
             for (int i = 0; i <= cars; ++i) {
-                auto p = ds->Dijkstra(28783203, 333245479, graph);
+                auto p = ds->Dijkstra(4565674939, 1186095168, graph);
                 testVehicles.push_back(Vehicle(i, p));
+                ds->Insert(Vehicle(i,p));
             }
 
             buildTime = (double) (clock() - tStart) / CLOCKS_PER_SEC;
@@ -115,8 +116,8 @@ int main(int argc, char *argv[]) {
             tStart = clock();
 
             //Uncomment this loop for testing the update time operation
-            for (int k = 0; k < cars; ++k) {
-                testVehicles[k].UpdateTime(5);
+            //for (int k = 0; k < cars; ++k) {
+            //    testVehicles[k].UpdateTime(5);
             }
 
             //Uncomment for dijkstras test

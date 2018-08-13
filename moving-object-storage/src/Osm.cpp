@@ -181,12 +181,8 @@ std::unordered_map<osmium::object_id_type, NeighbourList> Osm::NodeWayBuilder(st
     osmium::apply(reader, locationHandler, handler);
 
     handler.DeleteSingles();
-    handler.DeleteSingles();
-    handler.DeleteSingles();
-    handler.DeleteSingles();
-    handler.DeleteSingles();
-    handler.DeleteSingles();
-    handler.DeleteSingles();
+
+
 
     std::cout << "Built node array" << std::endl;
 

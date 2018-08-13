@@ -127,11 +127,17 @@ long DataStructure::GetNumCarsInSeconds(osmium::object_id_type edgeId, long time
     int cars = 0;
     if (EdgeInEVList(edgeId)) {
         auto ev = EVList[edgeId];
+        return ev.vehicles.size()/3;
         for (auto v : ev.vehicles) {
+            auto something = *v;
+            auto kappa = something.trajectoryMap;
+            if (kappa.empty() > 0){
+                cout << " something" << endl;
+            }
             auto timeSpan = ev.idealCost/2;
             auto arrival = *v->trajectoryMap[edgeId];
 
-            if( (time-timeSpan) <= arrival && (time+timeSpan) >= arrival)
+            if( (time-timeSpan) <= *arrival && (time+timeSpan) >= *arrival)
                 cars++;
         }
     }
@@ -169,31 +175,39 @@ DataStructure::Dijkstra(osmium::object_id_type startNode, osmium::object_id_type
 
     unordered_map<osmium::object_id_type, long> distance;
     unordered_map<osmium::object_id_type, osmium::object_id_type> previous;
-
+    unordered_map<osmium::object_id_type, osmium::object_id_type> edges;
     for (auto i = graph.begin(); i != graph.end() ; ++i)
     {
         distance[i->first] = std::numeric_limits<long>::max();
         previous[i->first] = -1;
-        Q.push({0,startNode});
+        edges[i->first] = -1;
     }
+    Q.push({0,startNode});
 
     distance[startNode] = 0;
-
+    long u = 0;
+    int count = 0;
     while(!Q.empty())
     {
-        long u = Q.top().second;
+        u = Q.top().second;
         Q.pop();
-        int count = 0;
+        count = 0;
+        auto g = graph[u];
         auto c = graph[u].head;
+
         while( count < graph[u].length)
         {
             osmium::object_id_type v = c->nodeId;
-            auto w = CostCalc(c->edge,distance[u]);
+            auto cedge = c->edge;
+            auto w = CostCalc(cedge,distance[u]);
+            auto distu =distance[u];
+            auto distv = distance[v];
 
-            if(distance[v] > distance[u] + w)
+            if(distance[v] > distance[u] + w && u !=v)
             {
                 distance[v] = static_cast<long>(distance[u] + w);
                 previous[v] = u;
+                edges[v] = cedge;
                 Q.push({distance[v],v});
             }
             count++;
@@ -202,26 +216,30 @@ DataStructure::Dijkstra(osmium::object_id_type startNode, osmium::object_id_type
             c = c->next;
             if(u == endNode)
             {
-                return ReturnPath(previous, endNode, distance);
+                return ReturnPath(previous, endNode, distance, edges);
             }
         }
-        return ReturnPath(previous, endNode ,distance);
+
     }
+    return ReturnPath(previous, endNode ,distance, edges);
 
 }
 
 Trajectory_t
 DataStructure::ReturnPath(unordered_map<osmium::object_id_type, osmium::object_id_type> prev, osmium::object_id_type target
-        ,unordered_map<osmium::object_id_type, long> distance)
+        ,unordered_map<osmium::object_id_type, long> distance,unordered_map<osmium::object_id_type, osmium::object_id_type> edges)
 {
     auto S = Trajectory_t();
-
-    while(prev[target] != NULL)
+    auto edge = edges[target];
+    auto current = target;
+    while(prev[current]!= -1)
     {
-        S.emplace_back(make_tuple(target,distance[target]));
-        target = prev[target];
+        S.emplace_back(make_tuple(edge,distance[current]));
+        current = prev[current];
+        edge = edges[current];
 
     }
+
 
     return S;
 }
