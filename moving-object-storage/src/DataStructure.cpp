@@ -32,7 +32,7 @@ Trajectory_t DataStructure::testTra()
 EdgeVehicleList DataStructure::EVListBuilder(vector<osmium::object_id_type> allWays,
                                              vector<tuple<double, double>> costAndLength)
 {
-    auto x = unordered_map<osmium::object_id_type, EdgeVehicleReference>();
+    auto x = map<osmium::object_id_type, EdgeVehicleReference>();
 
     for (int i = 0; i < allWays.size(); ++i) {
         vector<Vehicle> y = vector<Vehicle>();
@@ -54,7 +54,7 @@ void DataStructure::Insert(Vehicle v)
         cout << "Vehicle has no (an empty) trajectory!!!!" << endl;
         return;
     }
-    auto it = unordered_map<osmium::object_id_type, EdgeVehicleReference>::iterator();
+    auto it = map<osmium::object_id_type, EdgeVehicleReference>::iterator();
 
     auto list = this->FindAllEdges(v.trajectory);
 
@@ -168,9 +168,9 @@ DataStructure::Dijkstra(osmium::object_id_type startNode, osmium::object_id_type
 {
     priority_queue<iPair, vector<iPair>, greater<iPair> > Q;
 
-    unordered_map<osmium::object_id_type, long> distance;
-    unordered_map<osmium::object_id_type, osmium::object_id_type> previous;
-    unordered_map<osmium::object_id_type, osmium::object_id_type> edges;
+    map<osmium::object_id_type, long> distance;
+    map<osmium::object_id_type, osmium::object_id_type> previous;
+    map<osmium::object_id_type, osmium::object_id_type> edges;
     for (auto i = graph.begin(); i != graph.end() ; ++i)
     {
         distance[i->first] = std::numeric_limits<long>::max();
@@ -221,8 +221,8 @@ DataStructure::Dijkstra(osmium::object_id_type startNode, osmium::object_id_type
 }
 
 Trajectory_t
-DataStructure::ReturnPath(unordered_map<osmium::object_id_type, osmium::object_id_type> prev, osmium::object_id_type target
-        ,unordered_map<osmium::object_id_type, long> distance,unordered_map<osmium::object_id_type, osmium::object_id_type> edges)
+DataStructure::ReturnPath(map<osmium::object_id_type, osmium::object_id_type> prev, osmium::object_id_type target
+        ,map<osmium::object_id_type, long> distance,map<osmium::object_id_type, osmium::object_id_type> edges)
 {
     auto S = Trajectory_t();
     auto edge = edges[target];

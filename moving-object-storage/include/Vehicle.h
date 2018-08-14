@@ -19,7 +19,7 @@ public:
 
     long Id = -1; //-1 means uninitialized!
     std::vector<std::tuple<osmium::object_id_type, long>> trajectory{};
-    unordered_map<osmium::object_id_type, long> trajectoryMap{};
+    map<osmium::object_id_type, long> trajectoryMap{};
 
     Vehicle() = default;
 
