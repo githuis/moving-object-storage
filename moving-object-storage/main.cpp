@@ -87,7 +87,7 @@ int main(int argc, char *argv[]) {
 
     clock_t tStart;
     vector<Vehicle> testVehicles;
-    int MaxOperations = 1000000;
+    int MaxOperations = 1000;
     double buildTime = 0;
     double updateTime = 0;
     double vm, rss;
@@ -116,8 +116,8 @@ int main(int argc, char *argv[]) {
             tStart = clock();
 
             //Uncomment this loop for testing the update time operation
-            //for (int k = 0; k < cars; ++k) {
-            //    testVehicles[k].UpdateTime(5);
+            for (int k = 0; k < cars; ++k) {
+                testVehicles[k].UpdateTime(5);
             }
 
             //Uncomment for dijkstras test
@@ -177,7 +177,7 @@ int main(int argc, char *argv[]) {
 
         }
 
-        cout << endl << endl;
+     cout << endl << endl;
 
     cout << "End of running" <<
         endl;

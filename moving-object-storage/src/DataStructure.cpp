@@ -35,7 +35,7 @@ EdgeVehicleList DataStructure::EVListBuilder(vector<osmium::object_id_type> allW
     auto x = unordered_map<osmium::object_id_type, EdgeVehicleReference>();
 
     for (int i = 0; i < allWays.size(); ++i) {
-        vector<Vehicle *> y = vector<Vehicle *>();
+        vector<Vehicle> y = vector<Vehicle>();
 
         auto EVR = EdgeVehicleReference(allWays[i]);
         EVR.vehicles = y;
@@ -62,7 +62,7 @@ void DataStructure::Insert(Vehicle v)
 
         it = EVList.find(list[i]);
         if (it != EVList.end()) {
-            EVList[list[i]].vehicles.push_back(&v);
+            EVList[list[i]].vehicles.push_back(v);
         } else {
             cout << "Edge not found!" << endl;
         }
@@ -82,23 +82,23 @@ vector<osmium::object_id_type> DataStructure::FindAllEdges(Trajectory_t traj)
 
 void DataStructure::UpdateVehicleTrajectory(Vehicle v, Trajectory_t newTrajectory)
 {
-    DeleteVehicleFromEVList(v);
+    //DeleteVehicleFromEVList(v);
     v.UpdateTrajectory(newTrajectory);
     Insert(v);
 }
 
-void DataStructure::DeleteVehicleFromEdge(Vehicle v, osmium::object_id_type edgeId)
-{
-    vector<Vehicle *>::iterator vit;
-
-    if (EdgeInEVList(edgeId))
-        remove(EVList[edgeId].vehicles.begin(), EVList[edgeId].vehicles.end(), &v);
-}
+//void DataStructure::DeleteVehicleFromEdge(Vehicle v, osmium::object_id_type edgeId)
+//{
+//    vector<Vehicle>::iterator vit;
+//
+//    if (EdgeInEVList(edgeId))
+//        remove(EVList[edgeId].vehicles.begin(), EVList[edgeId].vehicles.end(), v);
+//}
 
 void DataStructure::DeleteVehicleFromEVList(Vehicle v)
 {
     for (auto i : v.trajectory) {
-        DeleteVehicleFromEdge(v, get<0>(i));
+        //DeleteVehicleFromEdge(v, get<0>(i));
     }
 }
 
@@ -127,17 +127,11 @@ long DataStructure::GetNumCarsInSeconds(osmium::object_id_type edgeId, long time
     int cars = 0;
     if (EdgeInEVList(edgeId)) {
         auto ev = EVList[edgeId];
-        return ev.vehicles.size()/3;
         for (auto v : ev.vehicles) {
-            auto something = *v;
-            auto kappa = something.trajectoryMap;
-            if (kappa.empty() > 0){
-                cout << " something" << endl;
-            }
             auto timeSpan = ev.idealCost/2;
-            auto arrival = *v->trajectoryMap[edgeId];
+            auto arrival = v.trajectoryMap[edgeId];
 
-            if( (time-timeSpan) <= *arrival && (time+timeSpan) >= *arrival)
+            if( (time-timeSpan) <= arrival && (time+timeSpan) >= arrival)
                 cars++;
         }
     }
@@ -147,6 +141,7 @@ long DataStructure::GetNumCarsInSeconds(osmium::object_id_type edgeId, long time
 double DataStructure::CostCalc(osmium::object_id_type edge, long startDelay)
 {
     long carsOnEdge = GetNumCarsInSeconds(edge, startDelay);
+
     auto density = carsOnEdge / EVList[edge].length;
 
     if(EdgeInEVList(edge))
