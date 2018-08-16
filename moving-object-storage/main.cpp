@@ -87,7 +87,7 @@ int main(int argc, char *argv[]) {
 
     clock_t tStart;
     vector<Vehicle> testVehicles;
-    int MaxOperations = 1000;
+    int MaxOperations = 10000;
     double buildTime = 0;
     double updateTime = 0;
     double vm, rss;
@@ -121,7 +121,7 @@ int main(int argc, char *argv[]) {
             }
 
             //Uncomment for dijkstras test
-            //auto test = ds->Dijkstra(28783203,333245479,graph);
+            //auto test = ds->Dijkstra(4565674939,1186095168,graph);
 
             //Uncomment this loop for testing the update trajectory operation
             //for (int k = 0; k < cars; ++k) {
@@ -133,10 +133,10 @@ int main(int argc, char *argv[]) {
 
             //Uncomment this loop for testing the weight calculation operation
             //for (int i = 0; i < cars; ++i) {
-            //
+
             //    auto veh = testVehicles[i];
             //    double totalCost;
-            //
+
             //    for (auto pair : veh.trajectory){
             //        totalCost += ds->CostCalc(get<0>(pair), get<1>(pair));
             //    }
